@@ -1,0 +1,22 @@
+.DS_Store
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+dist/
+build/
+htmlcov/
+.coverage
+coverage.xml
+
+# Generated experiment outputs
+artifacts/
+runs/
+
