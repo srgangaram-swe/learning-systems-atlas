@@ -1,0 +1,8 @@
+experiment: classification_benchmark
+seed: 42
+dataset: breast_cancer
+test_size: 0.20
+cv_folds: 5
+logistic_c: 1.0
+forest_estimators: 160
+forest_max_depth: 8

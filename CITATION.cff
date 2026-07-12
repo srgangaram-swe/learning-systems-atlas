@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If this software supports your work, please cite it using this metadata."
+title: "Learning Systems Atlas"
+type: software
+authors:
+  - family-names: Gangaram
+    given-names: "Saif Ryan"
+    alias: srgangaram-swe
+repository-code: "https://github.com/srgangaram-swe/comprehensive_ml"
+license: MIT
+version: 0.1.0
