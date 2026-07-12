@@ -1,0 +1,8 @@
+experiment: regression_benchmark
+seed: 42
+dataset: diabetes
+test_size: 0.20
+cv_folds: 5
+ridge_alpha: 10.0
+forest_estimators: 160
+forest_max_depth: 8

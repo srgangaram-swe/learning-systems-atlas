@@ -1,6 +1,7 @@
 .DS_Store
 .idea/
 .vscode/
+.ipynb_checkpoints/
 
 # Python
 __pycache__/
@@ -15,8 +16,8 @@ build/
 htmlcov/
 .coverage
 coverage.xml
+*.log
 
 # Generated experiment outputs
 artifacts/
 runs/
-

@@ -1,0 +1,9 @@
+experiment: clustering_benchmark
+seed: 42
+dataset: noisy_moons
+n_samples: 600
+noise: 0.08
+kmeans_clusters: 2
+kmeans_n_init: 20
+dbscan_eps: 0.25
+dbscan_min_samples: 8
