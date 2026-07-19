@@ -9,7 +9,7 @@ not maintained as separate supported lines.
 ## Reporting a vulnerability
 
 Do not open a public issue for a suspected vulnerability. Use
-[GitHub private vulnerability reporting](https://github.com/srgangaram-swe/comprehensive_ml/security/advisories/new)
+[GitHub private vulnerability reporting](https://github.com/srgangaram-swe/learning-systems-atlas/security/advisories/new)
 with:
 
 - affected revision and environment;
