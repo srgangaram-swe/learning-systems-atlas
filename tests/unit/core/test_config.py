@@ -10,6 +10,8 @@ from learning_atlas.core.config import (
     ClusteringBenchmarkConfig,
     QLearningConfig,
     RegressionBenchmarkConfig,
+    ScratchClassificationBenchmarkConfig,
+    ScratchRegressionBenchmarkConfig,
     config_schema,
     load_config,
     parse_config,
@@ -23,6 +25,14 @@ pytestmark = pytest.mark.unit
     [
         ("configs/supervised/regression.yaml", RegressionBenchmarkConfig),
         ("configs/supervised/classification.yaml", ClassificationBenchmarkConfig),
+        (
+            "configs/supervised/sprint-02/regression.yaml",
+            ScratchRegressionBenchmarkConfig,
+        ),
+        (
+            "configs/supervised/sprint-02/classification.yaml",
+            ScratchClassificationBenchmarkConfig,
+        ),
         ("configs/unsupervised/clustering.yaml", ClusteringBenchmarkConfig),
         ("configs/reinforcement/q_learning.yaml", QLearningConfig),
     ],
@@ -69,11 +79,17 @@ def test_numeric_boundaries_are_validated() -> None:
         RegressionBenchmarkConfig(test_size=0.5)
     with pytest.raises(ValidationError, match="epsilon_end"):
         QLearningConfig(epsilon_start=0.1, epsilon_end=0.2)
+    with pytest.raises(ValidationError, match="n_informative"):
+        ScratchRegressionBenchmarkConfig(n_features=3, n_informative=4)
+    with pytest.raises(ValidationError, match="n_informative"):
+        ScratchClassificationBenchmarkConfig(n_features=3, n_informative=4)
 
 
 def test_schema_exposes_all_registered_discriminators() -> None:
     serialized = str(config_schema())
     assert "regression_benchmark" in serialized
     assert "classification_benchmark" in serialized
+    assert "scratch_regression_benchmark" in serialized
+    assert "scratch_classification_benchmark" in serialized
     assert "clustering_benchmark" in serialized
     assert "q_learning_frozen_lake" in serialized

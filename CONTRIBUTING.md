@@ -40,6 +40,12 @@ Every model or algorithm change includes:
 - Generated metrics/plots from committed configs, plus assumptions and limits.
 - No secrets, employer/proprietary data, large datasets, caches, or checkpoints.
 
+Classical algorithm changes also include a formal specification and proof under
+`docs/proofs`: preconditions, postconditions, termination, a loop invariant or
+inductive correctness argument, time/space complexity, computational model,
+and numerical or probabilistic limitations where applicable. Property and
+differential tests provide evidence but are never described as proof.
+
 Production logic belongs under `src/learning_atlas`. A future notebook must be
 a thin presentation client whose underlying experiment is independently tested.
 
@@ -56,9 +62,9 @@ tests with branch coverage, and package builds. Subset commands are available as
 ## Commits and pull requests
 
 Use concise [Conventional Commits](https://www.conventionalcommits.org), such as
-`feat(supervised): add calibrated logistic regression`. Pull requests must link
+`feat(supervised): add stable logistic regression`. Pull requests must link
 the work item, explain scientific/engineering impact, include validation
 commands and observed evidence, and state risks or limitations.
 
-Work items live in [issues](https://github.com/srgangaram-swe/comprehensive_ml/issues)
-grouped by [milestones](https://github.com/srgangaram-swe/comprehensive_ml/milestones).
+Work items live in [issues](https://github.com/srgangaram-swe/learning-systems-atlas/issues)
+grouped by [milestones](https://github.com/srgangaram-swe/learning-systems-atlas/milestones).

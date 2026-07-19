@@ -1,4 +1,4 @@
-.PHONY: bootstrap format quality unit test integration check demo build
+.PHONY: bootstrap format quality unit test integration check demo demo-sprint2 build
 
 bootstrap:
 	uv sync --locked --all-groups
@@ -29,6 +29,11 @@ check: quality
 
 demo:
 	uv run learning-atlas run-all --config-dir configs --output-dir runs/quickstart
+
+demo-sprint2:
+	uv run learning-atlas benchmark-supervised \
+		--config-dir configs/supervised/sprint-02 \
+		--output-dir runs/sprint-02
 
 build:
 	uv build

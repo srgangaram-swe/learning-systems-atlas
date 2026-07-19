@@ -2,15 +2,17 @@
 
 **Signal. Structure. Strategy.**
 
-[![CI](https://github.com/srgangaram-swe/comprehensive_ml/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/srgangaram-swe/comprehensive_ml/actions/workflows/ci.yml)
+[![CI](https://github.com/srgangaram-swe/learning-systems-atlas/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/srgangaram-swe/learning-systems-atlas/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.11–3.13-3776AB)
-![Coverage](https://img.shields.io/badge/coverage-≥90%25-2E8B57)
+![Coverage](https://img.shields.io/badge/coverage-97.3%25-2E8B57)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Learning Systems Atlas is a reproducible, production-grade portfolio of
-supervised, unsupervised, deep, and reinforcement learning systems—from
-mathematical foundations and classical estimators to neural models and decision
-policies.
+implemented supervised, unsupervised, and reinforcement learning systems, with
+milestone-backed plans for deep learning and proof-linked classical algorithms.
+It connects mathematical foundations and classical estimators to decision
+policies, evidence, and production engineering practice without claiming future
+milestones as complete.
 
 The project is organized around evidence rather than isolated demos. Every
 reference experiment has a typed configuration, explicit seed streams,
@@ -23,7 +25,52 @@ typed `src` package; notebooks are reserved for later presentation layers.
 > bundled, synthetic, or openly documented sources. It contains no employer or
 > proprietary data and does not represent any employer.
 
-## Sprint 1 evidence
+## Latest evidence — 19 from-scratch supervised candidate configurations
+
+Sprint 2 adds auditable NumPy implementations beneath the experiment layer. The
+locked seed-42 profile uses identical training folds, fold-fitted preprocessing,
+and one untouched outer holdout per task.
+
+| Task | Compared candidates | Training-only selection | Untouched-test evidence |
+|---|---|---|---|
+| Regression | mean, OLS/lstsq, OLS/GD, Ridge, Lasso, CART, forest, boosting, k-NN | Ridge: CV RMSE `11.753 ± 0.366` | RMSE `12.638`, R² `0.875`, `64.8%` lower RMSE than mean |
+| Classification | prior, logistic, CART, forest, boosting, k-NN, linear/RBF SVM, Gaussian/Multinomial NB | GaussianNB after a deterministic CV tie: macro-F1 `0.931 ± 0.036` | macro-F1 `0.908`, accuracy `90.8%`, Brier `0.091` |
+
+SVM probability metrics are intentionally absent: an uncalibrated decision
+margin is not presented as a probability. The from-scratch source boundary is
+machine-tested to reject hidden scikit-learn imports.
+
+<table>
+  <tr>
+    <td><img src="docs/assets/sprint-02/scratch_regression_cv.png" alt="Regression cross-validation distributions"></td>
+    <td><img src="docs/assets/sprint-02/scratch_classification_cv.png" alt="Classification cross-validation distributions"></td>
+  </tr>
+  <tr>
+    <td align="center">Every regression validation fold, not only an aggregate</td>
+    <td align="center">Macro-F1 dispersion across ten candidate configurations</td>
+  </tr>
+  <tr>
+    <td><img src="docs/assets/sprint-02/scratch_regression_regularization.png" alt="Regularization path"></td>
+    <td><img src="docs/assets/sprint-02/scratch_classification_boundaries.png" alt="Projected decision surfaces"></td>
+  </tr>
+  <tr>
+    <td align="center">Ridge shrinkage and exact Lasso sparsity</td>
+    <td align="center">Common projection of six decision surfaces</td>
+  </tr>
+  <tr>
+    <td><img src="docs/assets/sprint-02/scratch_regression_ensembles.png" alt="Regression ensemble evidence"></td>
+    <td><img src="docs/assets/sprint-02/scratch_classification_diagnostics.png" alt="Classification diagnostics"></td>
+  </tr>
+  <tr>
+    <td align="center">OOB/holdout agreement and stagewise loss</td>
+    <td align="center">ROC, confusion, and descriptive reliability</td>
+  </tr>
+</table>
+
+See the [complete 21-plot result gallery](docs/results.md) and
+[Sprint 2 mathematical implementation notes](docs/sprint-02.md).
+
+## Sprint 1 cross-paradigm evidence
 
 The locked reference profile uses seed `42` and runs without network access.
 These are observed outputs from the committed configs, not target values used
@@ -60,17 +107,18 @@ are never available to fitting or model selection.
   </tr>
 </table>
 
-See the complete [Sprint 1 result and plot gallery](docs/results.md).
+See the complete [reference results and plot gallery](docs/results.md).
 
 ## What is implemented
 
 | Area | Current implementation | Planned breadth |
 |---|---|---|
-| Core math/API | fitted-state estimator contract, regressor/classifier scoring mixins, finite/shape/dtype validation | metrics, datasets, optimizers, calibration, uncertainty |
-| Supervised | regularized linear and tree-ensemble regression; logistic and tree-ensemble classification; dummy baselines | OLS/GD, Lasso, CART, forests, boosting, k-NN, SVMs, Naive Bayes |
+| Core math/API | fitted-state contracts; finite/shape/dtype validation; metrics; truth-bearing generators; seeded split/fold utilities; preprocessing | calibration, uncertainty, optimization extensions |
+| Supervised | from-scratch OLS/GD, Ridge/Lasso, logistic, CART, forests, boosting, k-NN, kernel SVM, Gaussian/Multinomial NB; production-library references | calibration, uncertainty, large-scale solvers |
 | Unsupervised | k-means and DBSCAN comparison with label-isolated evaluation | GMM/EM, hierarchical clustering, PCA/SVD, t-SNE, representation learning |
 | Deep learning | architecture and work items defined | reverse-mode autograd, MLP, PyTorch engine, CNN, LSTM, autoencoder |
 | Reinforcement learning | tabular Q-learning, random baseline, isolated policy evaluation | bandits, dynamic programming, SARSA, REINFORCE, DQN |
+| Algorithms | proof/benchmark platform and 15 comprehensive work items defined | sorting/search, structures, DP/greedy, graphs, strings, geometry, Fox matrix multiplication, randomized/approximation |
 | ML systems | locked environments, manifests, hashes, transactional artifacts, CI matrix | tracking, validation, serving, monitoring, release automation |
 
 Deep learning is intentionally listed as planned until its tested milestone is
@@ -82,8 +130,8 @@ Prerequisites: Git and Python `3.11`, `3.12`, or `3.13`. Install
 [`uv`](https://docs.astral.sh/uv/getting-started/installation/), then:
 
 ```bash
-git clone https://github.com/srgangaram-swe/comprehensive_ml.git
-cd comprehensive_ml
+git clone https://github.com/srgangaram-swe/learning-systems-atlas.git
+cd learning-systems-atlas
 uv sync --locked --all-groups
 uv run learning-atlas list
 uv run learning-atlas run-all --config-dir configs --output-dir runs/quickstart
@@ -98,6 +146,7 @@ Useful commands:
 ```bash
 uv run learning-atlas validate configs/supervised/classification.yaml
 uv run learning-atlas schema
+uv run learning-atlas benchmark-supervised -c configs/supervised/sprint-02 -o runs/sprint-02
 uv run learning-atlas run configs/reinforcement/q_learning.yaml -o runs/frozen-lake
 make check
 ```
@@ -109,6 +158,7 @@ flowchart LR
     YAML[Strict YAML config] --> ADAPTER[Pydantic discriminated schema]
     ADAPTER --> REGISTRY[Explicit experiment registry]
     REGISTRY --> RUNNER[Transactional runner]
+    NUMPY[NumPy-only estimator layer] --> SUP[Supervised experiments]
     RUNNER --> SUP[Supervised experiments]
     RUNNER --> UNSUP[Unsupervised experiments]
     RUNNER --> RL[RL experiments]
@@ -142,23 +192,27 @@ Read [architecture](docs/architecture.md),
   atomically after full validation.
 - Tests assert learning relative to naive baselines with stable margins rather
   than brittle exact floating-point goldens.
+- From-scratch numerical modules cannot import scikit-learn; hand fixtures,
+  algebraic properties, and independent differential oracles test correctness.
 - The committed lock covers macOS/Linux resolution; CI tests Python 3.11–3.13
   on immutable action revisions and an explicit Ubuntu runner.
 
 The local gate currently includes strict Ruff formatting/linting, strict mypy,
-`110+` unit/integration tests, branch coverage ≥90%, lock verification, and
-wheel/sdist builds. CI runs the complete suite across all supported Python versions.
+`405` unit/integration/property tests, `97.3%` branch-aware coverage, lock
+verification, and wheel/sdist builds. CI runs the complete suite across all
+supported Python versions.
 
 ## Roadmap and branching
 
-The repository has six assigned milestones and 43 scoped work items:
+The repository has seven assigned milestones and 58 scoped work items:
 
-1. [Foundations and three-paradigm vertical slice](https://github.com/srgangaram-swe/comprehensive_ml/milestone/1)
-2. [Trees, ensembles, and margins](https://github.com/srgangaram-swe/comprehensive_ml/milestone/2)
-3. [Unsupervised learning](https://github.com/srgangaram-swe/comprehensive_ml/milestone/3)
-4. [Deep learning](https://github.com/srgangaram-swe/comprehensive_ml/milestone/4)
-5. [Reinforcement learning](https://github.com/srgangaram-swe/comprehensive_ml/milestone/5)
-6. [Benchmarks, documentation, and v1.0](https://github.com/srgangaram-swe/comprehensive_ml/milestone/6)
+1. [Foundations and three-paradigm vertical slice](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/1)
+2. [Trees, ensembles, and margins](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/2)
+3. [Unsupervised learning](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/3)
+4. [Deep learning](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/4)
+5. [Reinforcement learning](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/5)
+6. [Benchmarks, documentation, and v1.0](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/6)
+7. [Algorithms, proofs, and performance](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/14)
 
 Feature branches are cut from `dev`, validated through pull requests, and
 deleted after merge. Release candidates flow `dev → main → prod`. See
@@ -166,8 +220,10 @@ deleted after merge. Release candidates flow `dev → main → prod`. See
 
 ## Honest limitations
 
-- Sprint 1 uses small bundled/synthetic problems for deterministic CPU CI; it
-  demonstrates methodology and system design, not state-of-the-art claims.
+- Reference profiles use small bundled/synthetic problems for deterministic CPU CI; they
+  demonstrate methodology and system design, not state-of-the-art claims.
+- The kernel SVM is intentionally a small/medium binary solver with quadratic
+  kernel storage; the NumPy CART/ensembles optimize auditability before scale.
 - Floating-point values can vary slightly across BLAS, platforms, and library
   releases even with identical seeds and dependency resolution.
 - The Wisconsin diagnostic dataset is appropriate for a technical benchmark,
@@ -175,7 +231,7 @@ deleted after merge. Release candidates flow `dev → main → prod`. See
 - Joblib artifacts must never be loaded from untrusted sources. The manifest
   hashes detect drift but do not make pickle-based formats safe.
 - GPU reproducibility, distributed training, model serving, and monitoring are
-  future milestones and are not implied by the current release.
+  future milestones and are not implied by the current repository state.
 
 ## License
 
