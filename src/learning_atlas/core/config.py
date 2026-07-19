@@ -44,6 +44,55 @@ class ClassificationBenchmarkConfig(BaseExperimentConfig):
     forest_max_depth: int | None = Field(default=8, ge=1, le=100)
 
 
+class ScratchRegressionBenchmarkConfig(BaseExperimentConfig):
+    """Configuration for the from-scratch regression comparison."""
+
+    experiment: Literal["scratch_regression_benchmark"] = "scratch_regression_benchmark"
+    n_samples: int = Field(default=480, ge=120, le=20_000)
+    n_features: int = Field(default=10, ge=2, le=100)
+    n_informative: int = Field(default=7, ge=1, le=100)
+    noise: float = Field(default=12.0, ge=0.0, le=1_000.0)
+    test_size: float = Field(default=0.25, gt=0.05, lt=0.5)
+    cv_folds: int = Field(default=5, ge=2, le=10)
+    forest_estimators: int = Field(default=48, ge=5, le=500)
+    boosting_estimators: int = Field(default=60, ge=5, le=500)
+    max_depth: int = Field(default=5, ge=1, le=20)
+
+    @model_validator(mode="after")
+    def informative_features_cannot_exceed_total(self) -> Self:
+        """Reject an impossible synthetic regression specification."""
+
+        if self.n_informative > self.n_features:
+            msg = "n_informative must be less than or equal to n_features"
+            raise ValueError(msg)
+        return self
+
+
+class ScratchClassificationBenchmarkConfig(BaseExperimentConfig):
+    """Configuration for the from-scratch classification comparison."""
+
+    experiment: Literal["scratch_classification_benchmark"] = "scratch_classification_benchmark"
+    n_samples: int = Field(default=520, ge=160, le=20_000)
+    n_features: int = Field(default=8, ge=2, le=100)
+    n_informative: int = Field(default=5, ge=2, le=100)
+    class_sep: float = Field(default=1.8, gt=0.0, le=20.0)
+    label_noise: float = Field(default=0.03, ge=0.0, lt=0.5)
+    test_size: float = Field(default=0.25, gt=0.05, lt=0.5)
+    cv_folds: int = Field(default=5, ge=2, le=10)
+    forest_estimators: int = Field(default=48, ge=5, le=500)
+    boosting_estimators: int = Field(default=60, ge=5, le=500)
+    max_depth: int = Field(default=5, ge=1, le=20)
+
+    @model_validator(mode="after")
+    def informative_features_cannot_exceed_total(self) -> Self:
+        """Reject an impossible synthetic classification specification."""
+
+        if self.n_informative > self.n_features:
+            msg = "n_informative must be less than or equal to n_features"
+            raise ValueError(msg)
+        return self
+
+
 class ClusteringBenchmarkConfig(BaseExperimentConfig):
     """Configuration for the unsupervised structure-discovery benchmark."""
 
@@ -55,6 +104,48 @@ class ClusteringBenchmarkConfig(BaseExperimentConfig):
     kmeans_n_init: int = Field(default=20, ge=1, le=100)
     dbscan_eps: float = Field(default=0.25, gt=0.0)
     dbscan_min_samples: int = Field(default=8, ge=2, le=1_000)
+
+
+class ScratchClusteringBenchmarkConfig(BaseExperimentConfig):
+    """Configuration for the from-scratch clustering and stability study."""
+
+    experiment: Literal["scratch_clustering_benchmark"] = "scratch_clustering_benchmark"
+    n_samples: int = Field(default=240, ge=120, le=2_000)
+    stability_trials: int = Field(default=4, ge=2, le=20)
+    perturbation_scale: float = Field(default=0.015, gt=0.0, le=0.25)
+    kmeans_n_init: int = Field(default=8, ge=2, le=50)
+    kmeans_max_iter: int = Field(default=200, ge=10, le=2_000)
+    gmm_n_init: int = Field(default=3, ge=1, le=20)
+    gmm_max_iter: int = Field(default=150, ge=10, le=2_000)
+    dbscan_eps: float = Field(default=0.24, gt=0.0, le=5.0)
+    dbscan_min_samples: int = Field(default=6, ge=2, le=100)
+
+
+class ScratchRepresentationBenchmarkConfig(BaseExperimentConfig):
+    """Configuration for PCA and t-SNE representation evidence."""
+
+    experiment: Literal["scratch_representation_benchmark"] = "scratch_representation_benchmark"
+    n_samples: int = Field(default=180, ge=90, le=1_000)
+    n_features: int = Field(default=6, ge=3, le=50)
+    clusters: int = Field(default=4, ge=2, le=12)
+    pca_components: int = Field(default=2, ge=2, le=20)
+    tsne_perplexity: float = Field(default=22.0, gt=2.0, le=100.0)
+    tsne_iterations: int = Field(default=400, ge=250, le=2_000)
+
+    @model_validator(mode="after")
+    def representation_dimensions_must_be_feasible(self) -> Self:
+        """Reject representations that exceed their feature/sample rank."""
+
+        if self.pca_components > self.n_features:
+            msg = "pca_components must be less than or equal to n_features"
+            raise ValueError(msg)
+        if self.tsne_perplexity >= self.n_samples:
+            msg = "tsne_perplexity must be less than n_samples"
+            raise ValueError(msg)
+        if self.clusters > self.n_samples:
+            msg = "clusters must be less than or equal to n_samples"
+            raise ValueError(msg)
+        return self
 
 
 class QLearningConfig(BaseExperimentConfig):
@@ -86,7 +177,11 @@ class QLearningConfig(BaseExperimentConfig):
 ExperimentConfig = Annotated[
     RegressionBenchmarkConfig
     | ClassificationBenchmarkConfig
+    | ScratchRegressionBenchmarkConfig
+    | ScratchClassificationBenchmarkConfig
     | ClusteringBenchmarkConfig
+    | ScratchClusteringBenchmarkConfig
+    | ScratchRepresentationBenchmarkConfig
     | QLearningConfig,
     Field(discriminator="experiment"),
 ]

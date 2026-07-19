@@ -7,6 +7,10 @@ from learning_atlas.core.config import (
     ClusteringBenchmarkConfig,
     QLearningConfig,
     RegressionBenchmarkConfig,
+    ScratchClassificationBenchmarkConfig,
+    ScratchClusteringBenchmarkConfig,
+    ScratchRegressionBenchmarkConfig,
+    ScratchRepresentationBenchmarkConfig,
 )
 from learning_atlas.core.contracts import Experiment
 from learning_atlas.core.registry import REGISTRY, build_experiment
@@ -18,7 +22,11 @@ def test_registry_covers_every_committed_experiment() -> None:
     configs = (
         RegressionBenchmarkConfig(),
         ClassificationBenchmarkConfig(),
+        ScratchRegressionBenchmarkConfig(),
+        ScratchClassificationBenchmarkConfig(),
         ClusteringBenchmarkConfig(),
+        ScratchClusteringBenchmarkConfig(),
+        ScratchRepresentationBenchmarkConfig(),
         QLearningConfig(),
     )
     assert {config.experiment for config in configs} == set(REGISTRY)
