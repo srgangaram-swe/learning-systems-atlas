@@ -5,6 +5,32 @@ the project uses [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-19
+
+### Added
+
+- NumPy-only k-means++ with isolated restarts, full-covariance Gaussian-mixture
+  EM in log space, deterministic DBSCAN, and single/complete/average/Ward
+  agglomerative clustering with a complete linkage record.
+- Thin-SVD PCA with deterministic component orientation and whitening contracts,
+  plus exact transductive t-SNE with perplexity and numerical-convergence checks.
+- Label-free clustering and representation selection, named perturbation and
+  sensitivity trials, retrospective-only ARI/NMI, heterogeneous generators, and
+  from-scratch internal/external metrics.
+- Atomic two-study unsupervised benchmark command, aggregate reports, persisted
+  model/assignment state, and twenty convergence, comparison, stability,
+  geometry, hierarchy, representation, and failure-revealing plots.
+- Distributed ML Systems & Scale Engineering milestone with 20 assigned work
+  items spanning collectives, DDP, FSDP2/ZeRO, model parallelism, resilient
+  checkpointing, orchestration, observability, security, cost, and open research.
+
+### Changed
+
+- Prepared package and citation metadata for version `0.3.0` and expanded the
+  recruiter-facing evidence around unsupervised mathematical and systems limits.
+
+## [0.2.0] - 2026-07-19
+
 ### Added
 
 - NumPy-only metrics, truth-bearing generators, deterministic split/fold
@@ -24,7 +50,7 @@ the project uses [Semantic Versioning](https://semver.org).
 
 ### Changed
 
-- Prepared the package version `0.2.0` and expanded the recruiter-facing
+- Prepared package version `0.2.0` and expanded the recruiter-facing
   evidence gallery to 21 plots.
 - Renamed the public repository to `learning-systems-atlas` while retaining the
   product name **Learning Systems Atlas**.

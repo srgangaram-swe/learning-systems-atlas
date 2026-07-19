@@ -41,10 +41,13 @@ artifact paths, and limitations. Volatile timing and environment provenance
 live in `manifest.json`, so two identical runs can produce identical result and
 model/plot hashes while still recording observed runtime.
 
-From-scratch supervised models use a separate `Estimator` contract with
-fitted-state checking, feature-count enforcement, regressor/classifier scoring,
-and centralized finite numerical validation. It is intentionally not imposed
-on clustering algorithms or RL agents.
+From-scratch supervised models use an `Estimator` contract with fitted-state
+checking, feature-count enforcement, regressor/classifier scoring, and
+centralized finite numerical validation. Unsupervised models use a sibling
+`UnsupervisedModel` contract for learned-state publication and feature validation,
+then expose only operations their mathematics supports: k-means/GMM prediction
+and PCA transformation are inductive, while DBSCAN, agglomeration, and t-SNE are
+explicitly transductive. Neither contract is imposed on RL agents.
 
 Within `supervised`, dependency direction is also explicit:
 
@@ -61,6 +64,23 @@ comparison experiments → reporting → transactional workflows
 An AST architecture test rejects scikit-learn, plotting, configuration, CLI,
 and artifact imports from the from-scratch layer. Benchmark adapters may use
 serialization/reporting, and independent tests may use scikit-learn as an oracle.
+
+The Sprint 3 unsupervised dependency direction preserves the truth boundary:
+
+```text
+validation + unsupervised fitted-state contracts
+                    ↓
+NumPy metrics / generators / label-free evaluation
+                    ↓
+k-means / GMM / DBSCAN / hierarchy / PCA / t-SNE
+                    ↓
+comparison experiments → retrospective truth audit → reporting → workflow
+```
+
+Candidate selection is complete before labels reach the retrospective audit.
+This ordering is enforced in the experiment boundary and tested by replacing or
+permuting labels while requiring selected models, internal scores, seeds, and
+label-free artifacts to remain unchanged.
 
 ## Execution transaction
 
@@ -84,10 +104,10 @@ sequenceDiagram
 Failures remove staging state. A non-empty target is never overwritten. The
 multi-experiment workflow preflights every config and duplicate name before it
 starts, then publishes the entire suite with the same transaction pattern.
-The Sprint 2 workflow nests both supervised task runs in another staging root,
-validates the exact experiment set, adds aggregate JSON/CSV/Markdown reports,
-hashes the complete nested publication in an aggregate manifest, and publishes
-all-or-nothing.
+The Sprint 2 and Sprint 3 benchmark workflows nest their supervised or
+unsupervised study runs in another staging root, validate the exact experiment
+set, add aggregate JSON/CSV/Markdown reports, hash the complete nested
+publication in an aggregate manifest, and publish all-or-nothing.
 
 ## Configuration and discovery
 
@@ -110,4 +130,5 @@ A new experiment must include:
 
 See [ADR-0001](adr/0001-paradigm-native-experiments.md) and
 [ADR-0002](adr/0002-transactional-local-artifacts.md), plus the
-[from-scratch boundary decision](adr/0004-from-scratch-estimator-boundary.md).
+[from-scratch boundary decision](adr/0004-from-scratch-estimator-boundary.md)
+and [label-free unsupervised selection decision](adr/0005-label-free-unsupervised-selection.md).

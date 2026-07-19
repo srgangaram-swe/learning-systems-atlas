@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "learning-systems-atlas"
-version = "0.2.0"
+version = "0.3.0"
 description = "A reproducible atlas of supervised, unsupervised, deep, and reinforcement learning systems."
 readme = "README.md"
 requires-python = ">=3.11,<3.14"

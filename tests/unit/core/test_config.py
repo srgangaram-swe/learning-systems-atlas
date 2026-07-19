@@ -11,7 +11,9 @@ from learning_atlas.core.config import (
     QLearningConfig,
     RegressionBenchmarkConfig,
     ScratchClassificationBenchmarkConfig,
+    ScratchClusteringBenchmarkConfig,
     ScratchRegressionBenchmarkConfig,
+    ScratchRepresentationBenchmarkConfig,
     config_schema,
     load_config,
     parse_config,
@@ -34,6 +36,14 @@ pytestmark = pytest.mark.unit
             ScratchClassificationBenchmarkConfig,
         ),
         ("configs/unsupervised/clustering.yaml", ClusteringBenchmarkConfig),
+        (
+            "configs/unsupervised/sprint-03/clustering.yaml",
+            ScratchClusteringBenchmarkConfig,
+        ),
+        (
+            "configs/unsupervised/sprint-03/representation.yaml",
+            ScratchRepresentationBenchmarkConfig,
+        ),
         ("configs/reinforcement/q_learning.yaml", QLearningConfig),
     ],
 )
@@ -83,6 +93,10 @@ def test_numeric_boundaries_are_validated() -> None:
         ScratchRegressionBenchmarkConfig(n_features=3, n_informative=4)
     with pytest.raises(ValidationError, match="n_informative"):
         ScratchClassificationBenchmarkConfig(n_features=3, n_informative=4)
+    with pytest.raises(ValidationError, match="pca_components"):
+        ScratchRepresentationBenchmarkConfig(n_features=3, pca_components=4)
+    with pytest.raises(ValidationError, match="tsne_perplexity"):
+        ScratchRepresentationBenchmarkConfig(n_samples=90, tsne_perplexity=90.0)
 
 
 def test_schema_exposes_all_registered_discriminators() -> None:
@@ -92,4 +106,6 @@ def test_schema_exposes_all_registered_discriminators() -> None:
     assert "scratch_regression_benchmark" in serialized
     assert "scratch_classification_benchmark" in serialized
     assert "clustering_benchmark" in serialized
+    assert "scratch_clustering_benchmark" in serialized
+    assert "scratch_representation_benchmark" in serialized
     assert "q_learning_frozen_lake" in serialized

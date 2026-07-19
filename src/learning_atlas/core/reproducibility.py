@@ -1,5 +1,6 @@
 """Reproducibility controls and environment provenance."""
 
+import hashlib
 import platform
 import subprocess
 import sys
@@ -40,6 +41,20 @@ def derive_seed(seed: int, stream: int) -> int:
         msg = "stream must be non-negative"
         raise ValueError(msg)
     sequence = np.random.SeedSequence([seed, stream])
+    return int(sequence.generate_state(1, dtype=np.uint32)[0])
+
+
+def derive_named_seed(seed: int, *namespace: str) -> int:
+    """Derive an order-independent uint32 stream from stable namespace components."""
+
+    _validate_seed(seed)
+    if not namespace or any(not component for component in namespace):
+        msg = "named seed namespaces must contain non-empty components"
+        raise ValueError(msg)
+    encoded = "\x1f".join(namespace).encode()
+    digest = hashlib.sha256(encoded).digest()
+    words = [int.from_bytes(digest[offset : offset + 4], "big") for offset in range(0, 16, 4)]
+    sequence = np.random.SeedSequence([seed, *words])
     return int(sequence.generate_state(1, dtype=np.uint32)[0])
 
 
