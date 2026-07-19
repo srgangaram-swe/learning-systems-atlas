@@ -11,7 +11,9 @@ from learning_atlas.core.config import (
     QLearningConfig,
     RegressionBenchmarkConfig,
     ScratchClassificationBenchmarkConfig,
+    ScratchClusteringBenchmarkConfig,
     ScratchRegressionBenchmarkConfig,
+    ScratchRepresentationBenchmarkConfig,
 )
 from learning_atlas.core.contracts import Experiment, LearningParadigm
 
@@ -76,6 +78,24 @@ def _scratch_classification(config: BaseExperimentConfig) -> Experiment:
     return ScratchClassificationBenchmark(config)
 
 
+def _scratch_clustering(config: BaseExperimentConfig) -> Experiment:
+    if not isinstance(config, ScratchClusteringBenchmarkConfig):
+        raise TypeError("scratch_clustering_benchmark requires ScratchClusteringBenchmarkConfig")
+    from learning_atlas.unsupervised.comparison import ScratchClusteringBenchmark
+
+    return ScratchClusteringBenchmark(config)
+
+
+def _scratch_representation(config: BaseExperimentConfig) -> Experiment:
+    if not isinstance(config, ScratchRepresentationBenchmarkConfig):
+        raise TypeError(
+            "scratch_representation_benchmark requires ScratchRepresentationBenchmarkConfig"
+        )
+    from learning_atlas.unsupervised.comparison import ScratchRepresentationBenchmark
+
+    return ScratchRepresentationBenchmark(config)
+
+
 REGISTRY: dict[str, ExperimentSpec] = {
     "regression_benchmark": ExperimentSpec(
         name="regression_benchmark",
@@ -106,6 +126,18 @@ REGISTRY: dict[str, ExperimentSpec] = {
         paradigm=LearningParadigm.UNSUPERVISED,
         description="Label-isolated K-means and DBSCAN structure-discovery benchmark.",
         factory=_clustering,
+    ),
+    "scratch_clustering_benchmark": ExperimentSpec(
+        name="scratch_clustering_benchmark",
+        paradigm=LearningParadigm.UNSUPERVISED,
+        description="From-scratch centroid, mixture, density, and hierarchical clustering.",
+        factory=_scratch_clustering,
+    ),
+    "scratch_representation_benchmark": ExperimentSpec(
+        name="scratch_representation_benchmark",
+        paradigm=LearningParadigm.UNSUPERVISED,
+        description="From-scratch PCA and transductive t-SNE representation evidence.",
+        factory=_scratch_representation,
     ),
     "q_learning_frozen_lake": ExperimentSpec(
         name="q_learning_frozen_lake",

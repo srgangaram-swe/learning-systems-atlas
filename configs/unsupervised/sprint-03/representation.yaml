@@ -1,0 +1,8 @@
+experiment: scratch_representation_benchmark
+seed: 42
+n_samples: 160
+n_features: 6
+clusters: 4
+pca_components: 2
+tsne_perplexity: 20.0
+tsne_iterations: 320

@@ -1,0 +1,11 @@
+experiment: scratch_clustering_benchmark
+seed: 42
+n_samples: 210
+stability_trials: 3
+perturbation_scale: 0.015
+kmeans_n_init: 8
+kmeans_max_iter: 200
+gmm_n_init: 3
+gmm_max_iter: 150
+dbscan_eps: 0.24
+dbscan_min_samples: 6

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -28,6 +27,7 @@ from learning_atlas.core.contracts import (
 )
 from learning_atlas.core.data import array_fingerprint
 from learning_atlas.core.estimators import Estimator
+from learning_atlas.core.reproducibility import derive_named_seed
 from learning_atlas.core.validation import FloatArray, validate_features
 from learning_atlas.reporting.supervised import (
     classification_diagnostics_plot,
@@ -161,11 +161,7 @@ class _CandidateSeeds:
 def _named_seed(seed: int, *namespace: str) -> int:
     """Derive a stable stream whose value is independent of candidate ordering."""
 
-    encoded = "\x1f".join(namespace).encode()
-    digest = hashlib.sha256(encoded).digest()
-    words = [int.from_bytes(digest[offset : offset + 4], "big") for offset in range(0, 16, 4)]
-    sequence = np.random.SeedSequence([seed, *words])
-    return int(sequence.generate_state(1, dtype=np.uint32)[0])
+    return derive_named_seed(seed, *namespace)
 
 
 def _candidate_seed_plan(

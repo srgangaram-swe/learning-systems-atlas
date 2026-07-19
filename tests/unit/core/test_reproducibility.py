@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from learning_atlas.core.reproducibility import (
+    derive_named_seed,
     derive_seed,
     environment_metadata,
     generator_for_seed,
@@ -26,6 +27,20 @@ def test_derived_streams_are_distinct_and_stable() -> None:
     second = [derive_seed(42, stream) for stream in range(4)]
     assert first == second
     assert len(set(first)) == 4
+
+
+def test_named_seed_is_order_independent_and_namespace_sensitive() -> None:
+    first = derive_named_seed(42, "unsupervised", "candidate", "kmeans")
+    replay = derive_named_seed(42, "unsupervised", "candidate", "kmeans")
+    changed = derive_named_seed(42, "unsupervised", "candidate", "gmm")
+    assert first == replay
+    assert first != changed
+
+
+@pytest.mark.parametrize("namespace", [(), ("",), ("valid", "")])
+def test_named_seed_requires_non_empty_namespace(namespace: tuple[str, ...]) -> None:
+    with pytest.raises(ValueError, match="namespace"):
+        derive_named_seed(42, *namespace)
 
 
 @pytest.mark.parametrize("seed", [-1, 2**32])

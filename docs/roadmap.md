@@ -1,6 +1,6 @@
 # Roadmap
 
-The roadmap is maintained as assigned GitHub issues grouped into seven milestones.
+The roadmap is maintained as assigned GitHub issues grouped into eight milestones.
 Each milestone is a coherent capability increment, not a checklist of unrelated
 algorithms.
 
@@ -65,6 +65,21 @@ deterministic benchmarks, and visual evidence. A proof compendium audits the
 distinction between exact, numerical, and probabilistic correctness.
 
 [Milestone](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/14)
+
+## Sprint 8 — Distributed ML systems and scale engineering
+
+A production-shaped distributed-learning substrate spanning deterministic data
+sharding, collective semantics, DDP, FSDP2/ZeRO, tensor/sequence/context,
+pipeline, and expert parallelism; topology-aware strategy planning; transactional
+distributed checkpoints; elastic recovery; scheduler integration; observability,
+security, cost, and low-bandwidth optimization research.
+
+The portable definition of done uses one-machine CPU multiprocess references and
+numerical-equivalence/fault-injection tests. Accelerator, fabric, and multi-node
+results are separate capability profiles with recorded hardware provenance;
+analytical or simulated results are never described as measured cluster speedups.
+
+[Milestone](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/15)
 
 ## Definition of done
 
