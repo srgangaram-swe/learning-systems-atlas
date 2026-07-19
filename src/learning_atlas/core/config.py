@@ -44,6 +44,55 @@ class ClassificationBenchmarkConfig(BaseExperimentConfig):
     forest_max_depth: int | None = Field(default=8, ge=1, le=100)
 
 
+class ScratchRegressionBenchmarkConfig(BaseExperimentConfig):
+    """Configuration for the from-scratch regression comparison."""
+
+    experiment: Literal["scratch_regression_benchmark"] = "scratch_regression_benchmark"
+    n_samples: int = Field(default=480, ge=120, le=20_000)
+    n_features: int = Field(default=10, ge=2, le=100)
+    n_informative: int = Field(default=7, ge=1, le=100)
+    noise: float = Field(default=12.0, ge=0.0, le=1_000.0)
+    test_size: float = Field(default=0.25, gt=0.05, lt=0.5)
+    cv_folds: int = Field(default=5, ge=2, le=10)
+    forest_estimators: int = Field(default=48, ge=5, le=500)
+    boosting_estimators: int = Field(default=60, ge=5, le=500)
+    max_depth: int = Field(default=5, ge=1, le=20)
+
+    @model_validator(mode="after")
+    def informative_features_cannot_exceed_total(self) -> Self:
+        """Reject an impossible synthetic regression specification."""
+
+        if self.n_informative > self.n_features:
+            msg = "n_informative must be less than or equal to n_features"
+            raise ValueError(msg)
+        return self
+
+
+class ScratchClassificationBenchmarkConfig(BaseExperimentConfig):
+    """Configuration for the from-scratch classification comparison."""
+
+    experiment: Literal["scratch_classification_benchmark"] = "scratch_classification_benchmark"
+    n_samples: int = Field(default=520, ge=160, le=20_000)
+    n_features: int = Field(default=8, ge=2, le=100)
+    n_informative: int = Field(default=5, ge=2, le=100)
+    class_sep: float = Field(default=1.8, gt=0.0, le=20.0)
+    label_noise: float = Field(default=0.03, ge=0.0, lt=0.5)
+    test_size: float = Field(default=0.25, gt=0.05, lt=0.5)
+    cv_folds: int = Field(default=5, ge=2, le=10)
+    forest_estimators: int = Field(default=48, ge=5, le=500)
+    boosting_estimators: int = Field(default=60, ge=5, le=500)
+    max_depth: int = Field(default=5, ge=1, le=20)
+
+    @model_validator(mode="after")
+    def informative_features_cannot_exceed_total(self) -> Self:
+        """Reject an impossible synthetic classification specification."""
+
+        if self.n_informative > self.n_features:
+            msg = "n_informative must be less than or equal to n_features"
+            raise ValueError(msg)
+        return self
+
+
 class ClusteringBenchmarkConfig(BaseExperimentConfig):
     """Configuration for the unsupervised structure-discovery benchmark."""
 
@@ -86,6 +135,8 @@ class QLearningConfig(BaseExperimentConfig):
 ExperimentConfig = Annotated[
     RegressionBenchmarkConfig
     | ClassificationBenchmarkConfig
+    | ScratchRegressionBenchmarkConfig
+    | ScratchClassificationBenchmarkConfig
     | ClusteringBenchmarkConfig
     | QLearningConfig,
     Field(discriminator="experiment"),

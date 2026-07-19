@@ -3,12 +3,16 @@
 .vscode/
 .ipynb_checkpoints/
 
+# Local agent operating context (intentionally not published)
+/AGENTS.md
+
 # Python
 __pycache__/
 *.py[cod]
 *.egg-info/
 .mypy_cache/
 .pytest_cache/
+.hypothesis/
 .ruff_cache/
 .venv/
 dist/

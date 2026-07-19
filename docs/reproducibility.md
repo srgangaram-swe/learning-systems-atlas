@@ -19,6 +19,14 @@ with NumPy `SeedSequence` namespaces:
 No experiment depends on process-global Python or NumPy random state. The CI
 process sets `PYTHONHASHSEED=0` before startup for stable hash iteration.
 
+Sprint 2 generators and split utilities accept an integer or an explicit local
+`numpy.random.Generator`. Comparison experiments derive SHA-256-namespaced
+`SeedSequence` streams for data, splitting, folds, and every candidate/fold or
+final refit. Candidate streams are keyed by name, so adding or reordering a
+candidate cannot perturb an existing model's data or random state. Random
+forests derive independent tree streams, and deterministic CART/SVM tie rules do
+not depend on set/hash iteration order.
+
 For Gymnasium environments, the first reset receives the derived environment
 seed, the action space is seeded explicitly, and later episodes advance the
 environment stream rather than resetting it to the same episode.
@@ -29,6 +37,8 @@ environment stream rather than resetting it to the same episode.
 - Source fingerprints include array shape, dtype, and contiguous values.
 - Train/test splitting precedes preprocessing.
 - Scalers live inside model pipelines and are fit inside CV folds.
+- Sprint 2 candidates share identical seeded fold indices; no estimator may
+  choose its own favorable partition.
 - Classification splits are stratified.
 - Clustering labels are not passed to fitting and do not determine selection.
 - RL training and evaluation use separate environment instances and streams.
@@ -44,6 +54,11 @@ Each run directory contains:
 | `manifest.json` | UTC time, runtime, platform, Python/direct dependency versions, Git state, config hash, artifact hashes |
 | `models/*` | selected pipeline, Q-table, and/or persisted policy |
 | `plots/*` | evidence generated from the same run |
+
+The two-task Sprint 2 workflow additionally publishes
+`benchmark_manifest.json`, which hashes the aggregate reports and every child
+artifact (including each resolved config and child manifest) before the staging
+directory is renamed into place.
 
 The runner checks that the result matches the config/registry, the selected
 candidate exists once, selected metrics agree with headline metrics, declared
@@ -61,10 +76,13 @@ baseline improvement, valid metric ranges, stable selection rules, and broad
 performance floors. Exact floating-point comparisons across different BLAS,
 CPU/GPU, compiler, or library versions are explicitly not promised.
 
-## Reproduce Sprint 1
+## Reproduce the reference profiles
 
 ```bash
 uv sync --locked --all-groups
 uv run learning-atlas run-all --config-dir configs --output-dir runs/reference
+uv run learning-atlas benchmark-supervised \
+  --config-dir configs/supervised/sprint-02 \
+  --output-dir runs/sprint-02
 make check
 ```

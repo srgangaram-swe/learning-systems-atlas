@@ -19,7 +19,7 @@ core ────────────────┐
 | Package | Responsibility | Must not own |
 |---|---|---|
 | `core` | config schemas, experiment/result contracts, validation, provenance, runner, artifacts | paradigm-specific training logic |
-| `supervised` | split-safe regression/classification pipelines and evaluation | CLI or filesystem orchestration |
+| `supervised` | NumPy-only estimators, metrics/data/preprocessing, split-safe comparisons | CLI or filesystem orchestration |
 | `unsupervised` | feature-only fitting, internal selection, retrospective external metrics | using targets in fit/selection |
 | `reinforcement` | agent update, exploration schedule, environment interaction, policy evaluation | global random state or training/evaluation coupling |
 | `reporting` | deterministic plot publication | model selection or metric computation |
@@ -46,6 +46,22 @@ fitted-state checking, feature-count enforcement, regressor/classifier scoring,
 and centralized finite numerical validation. It is intentionally not imposed
 on clustering algorithms or RL agents.
 
+Within `supervised`, dependency direction is also explicit:
+
+```text
+validation + estimator contracts
+             ↓
+NumPy metrics / data / preprocessing / model selection
+             ↓
+linear / tree / ensemble / neighbor / SVM / Bayesian estimators
+             ↓
+comparison experiments → reporting → transactional workflows
+```
+
+An AST architecture test rejects scikit-learn, plotting, configuration, CLI,
+and artifact imports from the from-scratch layer. Benchmark adapters may use
+serialization/reporting, and independent tests may use scikit-learn as an oracle.
+
 ## Execution transaction
 
 ```mermaid
@@ -68,6 +84,10 @@ sequenceDiagram
 Failures remove staging state. A non-empty target is never overwritten. The
 multi-experiment workflow preflights every config and duplicate name before it
 starts, then publishes the entire suite with the same transaction pattern.
+The Sprint 2 workflow nests both supervised task runs in another staging root,
+validates the exact experiment set, adds aggregate JSON/CSV/Markdown reports,
+hashes the complete nested publication in an aggregate manifest, and publishes
+all-or-nothing.
 
 ## Configuration and discovery
 
@@ -89,4 +109,5 @@ A new experiment must include:
 6. Source identity, assumptions, limitations, and an exact reproduction command.
 
 See [ADR-0001](adr/0001-paradigm-native-experiments.md) and
-[ADR-0002](adr/0002-transactional-local-artifacts.md).
+[ADR-0002](adr/0002-transactional-local-artifacts.md), plus the
+[from-scratch boundary decision](adr/0004-from-scratch-estimator-boundary.md).

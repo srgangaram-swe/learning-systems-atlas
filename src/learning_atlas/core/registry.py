@@ -10,6 +10,8 @@ from learning_atlas.core.config import (
     ExperimentConfig,
     QLearningConfig,
     RegressionBenchmarkConfig,
+    ScratchClassificationBenchmarkConfig,
+    ScratchRegressionBenchmarkConfig,
 )
 from learning_atlas.core.contracts import Experiment, LearningParadigm
 
@@ -56,6 +58,24 @@ def _q_learning(config: BaseExperimentConfig) -> Experiment:
     return FrozenLakeBenchmark(config)
 
 
+def _scratch_regression(config: BaseExperimentConfig) -> Experiment:
+    if not isinstance(config, ScratchRegressionBenchmarkConfig):
+        raise TypeError("scratch_regression_benchmark requires ScratchRegressionBenchmarkConfig")
+    from learning_atlas.supervised.comparison import ScratchRegressionBenchmark
+
+    return ScratchRegressionBenchmark(config)
+
+
+def _scratch_classification(config: BaseExperimentConfig) -> Experiment:
+    if not isinstance(config, ScratchClassificationBenchmarkConfig):
+        raise TypeError(
+            "scratch_classification_benchmark requires ScratchClassificationBenchmarkConfig"
+        )
+    from learning_atlas.supervised.comparison import ScratchClassificationBenchmark
+
+    return ScratchClassificationBenchmark(config)
+
+
 REGISTRY: dict[str, ExperimentSpec] = {
     "regression_benchmark": ExperimentSpec(
         name="regression_benchmark",
@@ -68,6 +88,18 @@ REGISTRY: dict[str, ExperimentSpec] = {
         paradigm=LearningParadigm.SUPERVISED,
         description="Leakage-safe dummy, logistic, and random-forest classification benchmark.",
         factory=_classification,
+    ),
+    "scratch_regression_benchmark": ExperimentSpec(
+        name="scratch_regression_benchmark",
+        paradigm=LearningParadigm.SUPERVISED,
+        description="From-scratch linear, neighbor, tree, forest, and boosting regression.",
+        factory=_scratch_regression,
+    ),
+    "scratch_classification_benchmark": ExperimentSpec(
+        name="scratch_classification_benchmark",
+        paradigm=LearningParadigm.SUPERVISED,
+        description="From-scratch linear, kernel, Bayesian, neighbor, tree, and ensemble models.",
+        factory=_scratch_classification,
     ),
     "clustering_benchmark": ExperimentSpec(
         name="clustering_benchmark",
