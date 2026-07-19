@@ -1,0 +1,33 @@
+name: Experiment proposal
+description: Propose a model family, benchmark, or evaluation study for the atlas.
+title: "experiment: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Scientific question
+      description: What falsifiable question or tradeoff will the experiment answer?
+    validations:
+      required: true
+  - type: textarea
+    id: baselines
+    attributes:
+      label: Data, baselines, and metrics
+      description: Include leakage controls, naive/reference baselines, and decision-relevant metrics.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Reproducibility and evidence plan
+      description: Configs, seeds, artifacts, plots, unit tests, integration test, and runtime budget.
+    validations:
+      required: true
+  - type: textarea
+    id: limits
+    attributes:
+      label: Risks and limitations
+      description: Known failure modes, misuse risks, and claims the study must not make.
+    validations:
+      required: true
