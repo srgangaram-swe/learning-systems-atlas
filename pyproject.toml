@@ -4,14 +4,18 @@ build-backend = "hatchling.build"
 
 [project]
 name = "learning-systems-atlas"
-version = "0.3.0"
+version = "0.4.0"
 description = "A reproducible atlas of supervised, unsupervised, deep, and reinforcement learning systems."
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 license = "MIT"
 authors = [{ name = "Saif Ryan Gangaram" }]
 keywords = [
+  "automatic-differentiation",
+  "deep-learning",
   "machine-learning",
+  "neural-networks",
+  "pytorch",
   "supervised-learning",
   "unsupervised-learning",
   "reinforcement-learning",
@@ -36,6 +40,7 @@ dependencies = [
   "pydantic~=2.12.0",
   "pyyaml>=6.0,<7",
   "scikit-learn~=1.9.0",
+  "torch>=2.9,<3",
   "typer>=0.20,<1",
 ]
 
@@ -73,6 +78,16 @@ dev = [
 
 [tool.uv]
 required-version = "==0.11.28"
+
+# CPU wheels keep CI and contributor environments small and hardware-neutral;
+# reference profiles are CPU-deterministic by design.
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/learning_atlas"]

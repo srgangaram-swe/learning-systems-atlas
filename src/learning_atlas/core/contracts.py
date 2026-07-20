@@ -21,6 +21,7 @@ class LearningParadigm(StrEnum):
 
     SUPERVISED = "supervised"
     UNSUPERVISED = "unsupervised"
+    DEEP = "deep"
     REINFORCEMENT = "reinforcement"
 
 

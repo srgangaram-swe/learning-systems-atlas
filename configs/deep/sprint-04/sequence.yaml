@@ -1,0 +1,14 @@
+experiment: deep_sequence_benchmark
+seed: 42
+n_sequences: 1200
+min_length: 8
+max_length: 32
+hidden_size: 48
+mlp_hidden_units: 64
+validation_fraction: 0.16
+test_fraction: 0.20
+max_epochs: 120
+batch_size: 64
+learning_rate: 0.005
+patience: 40
+device: cpu

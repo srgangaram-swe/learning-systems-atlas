@@ -148,6 +148,111 @@ class ScratchRepresentationBenchmarkConfig(BaseExperimentConfig):
         return self
 
 
+class ScratchMLPBenchmarkConfig(BaseExperimentConfig):
+    """Configuration for the autograd MLP study on planar tasks."""
+
+    experiment: Literal["scratch_mlp_benchmark"] = "scratch_mlp_benchmark"
+    n_samples: int = Field(default=320, ge=64, le=20_000)
+    xor_noise: float = Field(default=0.15, ge=0.0, le=1.0)
+    moons_noise: float = Field(default=0.1, ge=0.0, le=1.0)
+    hidden_units: int = Field(default=16, ge=2, le=256)
+    activation: Literal["relu", "tanh"] = "tanh"
+    learning_rate: float = Field(default=0.3, gt=0.0, le=10.0)
+    momentum: float = Field(default=0.9, ge=0.0, lt=1.0)
+    batch_size: int = Field(default=32, ge=1, le=4_096)
+    max_epochs: int = Field(default=300, ge=1, le=10_000)
+    validation_fraction: float = Field(default=0.2, gt=0.05, lt=0.5)
+    test_size: float = Field(default=0.25, gt=0.05, lt=0.5)
+    gradient_check_samples: int = Field(default=16, ge=4, le=128)
+
+    @model_validator(mode="after")
+    def holdouts_must_leave_training_data(self) -> Self:
+        """Reserve distinct validation and untouched-test partitions."""
+
+        if self.validation_fraction + self.test_size >= 0.8:
+            msg = "validation_fraction plus test_size must be below 0.8"
+            raise ValueError(msg)
+        return self
+
+
+class _TorchStudyConfig(BaseExperimentConfig):
+    """Shared knobs for every Trainer-driven PyTorch study."""
+
+    validation_fraction: float = Field(default=0.16, gt=0.05, lt=0.5)
+    test_fraction: float = Field(default=0.2, gt=0.05, lt=0.5)
+    max_epochs: int = Field(default=30, ge=1, le=1_000)
+    batch_size: int = Field(default=64, ge=1, le=4_096)
+    learning_rate: float = Field(default=3e-3, gt=0.0, le=1.0)
+    patience: int = Field(default=6, ge=1, le=100)
+    device: Literal["cpu", "auto"] = "cpu"
+
+    @model_validator(mode="after")
+    def holdouts_must_leave_training_data(self) -> Self:
+        """Reject splits that starve the training partition."""
+
+        if self.validation_fraction + self.test_fraction >= 0.8:
+            msg = "validation_fraction plus test_fraction must be below 0.8"
+            raise ValueError(msg)
+        return self
+
+
+class DeepVisionBenchmarkConfig(_TorchStudyConfig):
+    """Configuration for the CNN-versus-MLP digits study."""
+
+    experiment: Literal["deep_vision_benchmark"] = "deep_vision_benchmark"
+    n_samples: int = Field(default=1_000, ge=200, le=1_797)
+    hidden_units: int = Field(default=32, ge=4, le=512)
+    channels: int = Field(default=8, ge=2, le=64)
+    max_epochs: int = Field(default=25, ge=1, le=1_000)
+
+
+class DeepSequenceBenchmarkConfig(_TorchStudyConfig):
+    """Configuration for the LSTM long-range dependency study."""
+
+    experiment: Literal["deep_sequence_benchmark"] = "deep_sequence_benchmark"
+    n_sequences: int = Field(default=1_200, ge=200, le=50_000)
+    min_length: int = Field(default=6, ge=2, le=512)
+    max_length: int = Field(default=24, ge=2, le=512)
+    hidden_size: int = Field(default=48, ge=4, le=512)
+    mlp_hidden_units: int = Field(default=64, ge=4, le=1_024)
+    max_epochs: int = Field(default=60, ge=1, le=1_000)
+    learning_rate: float = Field(default=5e-3, gt=0.0, le=1.0)
+    patience: int = Field(default=10, ge=1, le=100)
+
+    @model_validator(mode="after")
+    def lengths_must_form_a_range(self) -> Self:
+        """Reject inverted or degenerate sequence-length ranges."""
+
+        if self.max_length < self.min_length:
+            msg = "max_length must be greater than or equal to min_length"
+            raise ValueError(msg)
+        return self
+
+
+class DeepAutoencoderBenchmarkConfig(_TorchStudyConfig):
+    """Configuration for the bottleneck autoencoder anomaly study."""
+
+    experiment: Literal["deep_autoencoder_benchmark"] = "deep_autoencoder_benchmark"
+    n_samples: int = Field(default=1_200, ge=200, le=1_797)
+    hidden_units: int = Field(default=32, ge=4, le=512)
+    latent_dim: int = Field(default=8, ge=2, le=64)
+    anomaly_fraction: float = Field(default=0.5, gt=0.05, le=1.0)
+    max_epochs: int = Field(default=60, ge=1, le=1_000)
+    patience: int = Field(default=8, ge=1, le=100)
+
+    @model_validator(mode="after")
+    def bottleneck_must_compress(self) -> Self:
+        """Reject architectures that are not genuine bottlenecks."""
+
+        if self.latent_dim >= self.hidden_units:
+            msg = "latent_dim must be strictly smaller than hidden_units"
+            raise ValueError(msg)
+        if self.hidden_units >= 64:
+            msg = "hidden_units must be smaller than the 64-feature digits input"
+            raise ValueError(msg)
+        return self
+
+
 class QLearningConfig(BaseExperimentConfig):
     """Configuration for tabular Q-learning on FrozenLake."""
 
@@ -182,6 +287,10 @@ ExperimentConfig = Annotated[
     | ClusteringBenchmarkConfig
     | ScratchClusteringBenchmarkConfig
     | ScratchRepresentationBenchmarkConfig
+    | ScratchMLPBenchmarkConfig
+    | DeepVisionBenchmarkConfig
+    | DeepSequenceBenchmarkConfig
+    | DeepAutoencoderBenchmarkConfig
     | QLearningConfig,
     Field(discriminator="experiment"),
 ]

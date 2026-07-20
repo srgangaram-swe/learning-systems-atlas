@@ -379,3 +379,192 @@ milestone rather than an unsupported scale claim.
 Read the [Sprint 3 mathematical and engineering notes](sprint-03.md) for the
 objectives, update equations, deterministic tie rules, complexity bounds,
 failure contracts, seed namespaces, and work-item traceability.
+
+## Sprint 4 — deep-learning systems
+
+Command:
+
+```bash
+uv run learning-atlas benchmark-deep \
+  --config-dir configs/deep/sprint-04 \
+  --output-dir runs/sprint-04
+```
+
+The workflow runs four studies and publishes their checkpoints, learned state,
+candidate records, 15 plots, aggregate JSON/CSV/Markdown comparisons, and a
+SHA-256 manifest as one transaction. Every result below is from the committed
+seed-42 CPU profile. Training data fit parameters, validation data select the
+candidate and stopping state, and untouched test data are opened only after
+selection.
+
+These are compact correctness and engineering references. They use one seed and
+one split, the bundled 8×8 digits dataset, synthetic temporal XOR, and synthetic
+image corruptions. They do not establish robustness, scaling, or state-of-the-art
+quality on natural data.
+
+### Reverse-mode autodiff and from-scratch MLP
+
+The first study implements tensor-valued reverse-mode differentiation without
+PyTorch or scikit-learn, then builds linear layers, tanh/ReLU, softmax
+cross-entropy, minibatch SGD, and momentum on that engine. On the committed XOR
+and two-moons tasks, the MLP reaches mean validation and test accuracy `1.000`;
+the linear logistic baseline reaches mean validation accuracy `0.5938` and test
+accuracy `0.600`. A frozen
+minibatch finite-difference audit bounds the worst analytic-gradient error at
+`1.5634e-9`.
+
+| Evidence | Observed value |
+|---|---:|
+| MLP mean validation accuracy | `1.0000` |
+| MLP mean untouched-test accuracy | `1.0000` |
+| Logistic mean validation accuracy | `0.5938` |
+| Logistic mean untouched-test accuracy | `0.6000` |
+| Maximum absolute gradient-check error | `1.5634e-9` |
+
+<table>
+  <tr>
+    <td><img src="assets/sprint-04/mlp_loss_curves.png" alt="From-scratch MLP optimization histories"></td>
+    <td><img src="assets/sprint-04/mlp_decision_boundaries.png" alt="From-scratch MLP decision boundaries"></td>
+  </tr>
+  <tr>
+    <td align="center">Deterministic minibatch loss histories expose convergence</td>
+    <td align="center">Nonlinear decisions on XOR and two moons</td>
+  </tr>
+</table>
+
+The exact scores come from controlled synthetic problems designed to expose
+linear and nonlinear behavior. The meaningful evidence is the end-to-end
+agreement between a reusable computation graph, finite differences,
+optimization history, and a baseline that cannot express the required nonlinear
+boundary.
+
+### CNN image classification
+
+The vision study compares a compact CNN with a dense MLP on the same normalized
+digits, split, Trainer, optimizer family, and epoch budget. Selection uses
+validation accuracy; the test set does not tune the architecture. The CNN wins
+on both validation and test evidence.
+
+| Candidate | Validation accuracy | Untouched-test accuracy |
+|---|---:|---:|
+| vision MLP | `0.9637` | `0.9414` |
+| **compact CNN (selected)** | **`0.9793`** | **`0.9707`** |
+
+The observed test gain is `0.0293` (2.93 percentage points). That is a
+single-seed result on small 8×8 images, not an uncertainty-qualified claim that
+the architecture dominates across datasets or initializations. Checkpoint
+reload tests compare model state, logits, loss, and metrics rather than relying
+on unchanged accuracy alone.
+
+<table>
+  <tr>
+    <td><img src="assets/sprint-04/vision_training_loss.png" alt="Vision training and validation loss"></td>
+    <td><img src="assets/sprint-04/vision_validation_accuracy.png" alt="Vision validation accuracy"></td>
+  </tr>
+  <tr>
+    <td align="center">Shared-budget loss trajectories for CNN and MLP</td>
+    <td align="center">Validation-only selection evidence over epochs</td>
+  </tr>
+  <tr>
+    <td><img src="assets/sprint-04/vision_confusion_matrix.png" alt="Compact CNN held-out confusion matrix"></td>
+    <td><img src="assets/sprint-04/vision_misclassified.png" alt="Compact CNN misclassified digits"></td>
+  </tr>
+  <tr>
+    <td align="center">Per-class held-out error structure</td>
+    <td align="center">Remaining mistakes are shown rather than hidden by accuracy</td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="assets/sprint-04/vision_conv_filters.png" alt="Learned first-layer convolution filters"></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">Learned first-layer kernels provide a parameter-level diagnostic</td>
+  </tr>
+</table>
+
+### Variable-length sequence classification
+
+The sequence task makes the target depend on the first and final token of a
+variable-length distractor sequence. A packed LSTM receives true lengths; the
+baseline MLP consumes a fixed padded layout. The LSTM separates the task while
+the baseline remains close to chance.
+
+| Candidate | Validation accuracy | Untouched-test accuracy |
+|---|---:|---:|
+| padded-position MLP | `0.5052` | `0.5625` |
+| **packed LSTM (selected)** | **`1.0000`** | **`1.0000`** |
+
+Appending additional padding changes the LSTM logits by a maximum of `0.0000`.
+This is a direct masking/packing invariant, not merely an aggregate accuracy
+check. The task is synthetic and deliberately isolates long-range state
+retention; it does not represent natural-language performance.
+
+<table>
+  <tr>
+    <td><img src="assets/sprint-04/sequence_training_loss.png" alt="Sequence training and validation loss"></td>
+    <td><img src="assets/sprint-04/sequence_validation_accuracy.png" alt="Sequence validation accuracy"></td>
+  </tr>
+  <tr>
+    <td align="center">Optimization behavior for the padded MLP and packed LSTM</td>
+    <td align="center">Validation evidence fixes the winner before test evaluation</td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="assets/sprint-04/sequence_accuracy_by_length.png" alt="Sequence accuracy by true length"></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">Length-stratified accuracy can reveal a hidden long-sequence failure</td>
+  </tr>
+</table>
+
+### Autoencoder representation and anomaly scoring
+
+The final study trains a bottleneck autoencoder on inlier digit images and uses
+reconstruction error to rank injected corruptions. Both candidates reach
+validation and untouched-test AUROC `1.000`; the declared exact-tie preference
+selects the autoencoder before the test partition is opened.
+The autoencoder's mean anomaly-to-inlier reconstruction-error ratio is `9.4343`.
+PCA's ratio is `7.4342`. Digit labels do not fit or select either representation;
+they enter only the retrospective latent-space audit, whose silhouette is
+`0.1947`. AUROC is threshold-free; this study does not estimate or calibrate an
+operating threshold.
+
+| Evidence | Observed value |
+|---|---:|
+| Autoencoder validation AUROC | `1.0000` |
+| Autoencoder untouched-test AUROC | `1.0000` |
+| PCA validation AUROC | `1.0000` |
+| PCA untouched-test AUROC | `1.0000` |
+| Autoencoder / PCA error-separation ratio | `9.4343` / `7.4342` |
+| Retrospective latent-class silhouette | `0.1947` |
+
+The perfect anomaly ranking reflects easily separated synthetic corruptions.
+The modest latent silhouette is retained beside it to prevent the anomaly score
+from being misrepresented as uniformly class-separable representation learning.
+
+<table>
+  <tr>
+    <td><img src="assets/sprint-04/autoencoder_training_loss.png" alt="Autoencoder training and validation loss"></td>
+    <td><img src="assets/sprint-04/autoencoder_reconstructions.png" alt="Autoencoder inlier and anomaly reconstructions"></td>
+  </tr>
+  <tr>
+    <td align="center">Reconstruction convergence and validation-loss monitoring across the 60-epoch ceiling</td>
+    <td align="center">Inputs and reconstructions expose what the score measures</td>
+  </tr>
+  <tr>
+    <td><img src="assets/sprint-04/autoencoder_error_histogram.png" alt="Autoencoder reconstruction-error distributions"></td>
+    <td><img src="assets/sprint-04/autoencoder_roc.png" alt="Autoencoder and PCA anomaly ROC curves"></td>
+  </tr>
+  <tr>
+    <td align="center">Inlier/anomaly overlap remains visible</td>
+    <td align="center">Ranking evidence for autoencoder and PCA reconstruction</td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="assets/sprint-04/autoencoder_latent.png" alt="Autoencoder latent representation"></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">Truth-colored latent structure is retrospective and reported with silhouette `0.1947`</td>
+  </tr>
+</table>
+
+Read the [Sprint 4 mathematical and engineering notes](sprint-04.md) for the
+autodiff chain rule, Trainer/checkpoint contracts, leakage boundaries, model
+interfaces, error handling, reproducibility scope, and known limitations.

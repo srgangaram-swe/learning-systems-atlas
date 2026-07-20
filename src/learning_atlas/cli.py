@@ -11,8 +11,12 @@ from learning_atlas import __version__
 from learning_atlas.core.config import config_schema, load_config
 from learning_atlas.core.registry import REGISTRY
 from learning_atlas.core.runner import run_experiment
+from learning_atlas.deep.autograd import AutogradError
+from learning_atlas.deep.mlp import MLPTrainingError
+from learning_atlas.deep.training import DeepTrainingError
 from learning_atlas.supervised.comparison import CandidateExecutionError
 from learning_atlas.unsupervised.comparison import UnsupervisedCandidateError
+from learning_atlas.workflows.deep_benchmark import run_deep_benchmark
 from learning_atlas.workflows.suite import run_suite
 from learning_atlas.workflows.supervised_benchmark import run_supervised_benchmark
 from learning_atlas.workflows.unsupervised_benchmark import run_unsupervised_benchmark
@@ -58,6 +62,9 @@ def validate(
     try:
         config = load_config(config_path)
     except (
+        AutogradError,
+        DeepTrainingError,
+        MLPTrainingError,
         OSError,
         ValueError,
         ValidationError,
@@ -86,6 +93,9 @@ def run(
     try:
         result = run_experiment(load_config(config_path), output_dir)
     except (
+        AutogradError,
+        DeepTrainingError,
+        MLPTrainingError,
         OSError,
         ValueError,
         ValidationError,
@@ -107,6 +117,9 @@ def run_all(
     try:
         results = run_suite(config_dir, output_dir)
     except (
+        AutogradError,
+        DeepTrainingError,
+        MLPTrainingError,
         OSError,
         ValueError,
         ValidationError,
@@ -165,6 +178,35 @@ def benchmark_unsupervised(
         UnsupervisedCandidateError,
     ) as error:
         typer.echo(f"unsupervised benchmark failed: {error}", err=True)
+        raise typer.Exit(code=2) from error
+    summary = {
+        result.experiment: {
+            "selected_model": result.selected_model,
+            "metrics": result.metrics,
+        }
+        for result in results
+    }
+    typer.echo(json.dumps(summary, indent=2, sort_keys=True))
+
+
+@app.command("benchmark-deep")
+def benchmark_deep(
+    config_dir: Annotated[Path, typer.Option("--config-dir", "-c")],
+    output_dir: Annotated[Path, typer.Option("--output-dir", "-o")],
+) -> None:
+    """Run and atomically publish all four Sprint 4 deep-learning studies."""
+
+    try:
+        results = run_deep_benchmark(config_dir, output_dir)
+    except (
+        AutogradError,
+        DeepTrainingError,
+        MLPTrainingError,
+        OSError,
+        ValueError,
+        ValidationError,
+    ) as error:
+        typer.echo(f"deep benchmark failed: {error}", err=True)
         raise typer.Exit(code=2) from error
     summary = {
         result.experiment: {
