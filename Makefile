@@ -1,4 +1,4 @@
-.PHONY: bootstrap format quality unit test integration check demo demo-sprint2 demo-sprint3 build
+.PHONY: bootstrap format quality unit test integration check demo demo-sprint2 demo-sprint3 demo-sprint4 build
 
 bootstrap:
 	uv sync --locked --all-groups
@@ -25,6 +25,7 @@ integration:
 
 check: quality
 	uv run pytest --cov=learning_atlas --cov-report=term-missing --cov-report=xml
+	uv run python scripts/check_branch_coverage.py coverage.xml --minimum 90
 	uv build
 
 demo:
@@ -39,6 +40,11 @@ demo-sprint3:
 	uv run learning-atlas benchmark-unsupervised \
 		--config-dir configs/unsupervised/sprint-03 \
 		--output-dir runs/sprint-03
+
+demo-sprint4:
+	uv run learning-atlas benchmark-deep \
+		--config-dir configs/deep/sprint-04 \
+		--output-dir runs/sprint-04
 
 build:
 	uv build

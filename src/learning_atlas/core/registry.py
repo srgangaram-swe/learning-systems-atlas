@@ -7,11 +7,15 @@ from learning_atlas.core.config import (
     BaseExperimentConfig,
     ClassificationBenchmarkConfig,
     ClusteringBenchmarkConfig,
+    DeepAutoencoderBenchmarkConfig,
+    DeepSequenceBenchmarkConfig,
+    DeepVisionBenchmarkConfig,
     ExperimentConfig,
     QLearningConfig,
     RegressionBenchmarkConfig,
     ScratchClassificationBenchmarkConfig,
     ScratchClusteringBenchmarkConfig,
+    ScratchMLPBenchmarkConfig,
     ScratchRegressionBenchmarkConfig,
     ScratchRepresentationBenchmarkConfig,
 )
@@ -96,6 +100,38 @@ def _scratch_representation(config: BaseExperimentConfig) -> Experiment:
     return ScratchRepresentationBenchmark(config)
 
 
+def _scratch_mlp(config: BaseExperimentConfig) -> Experiment:
+    if not isinstance(config, ScratchMLPBenchmarkConfig):
+        raise TypeError("scratch_mlp_benchmark requires ScratchMLPBenchmarkConfig")
+    from learning_atlas.deep.benchmarks import ScratchMLPBenchmark
+
+    return ScratchMLPBenchmark(config)
+
+
+def _deep_vision(config: BaseExperimentConfig) -> Experiment:
+    if not isinstance(config, DeepVisionBenchmarkConfig):
+        raise TypeError("deep_vision_benchmark requires DeepVisionBenchmarkConfig")
+    from learning_atlas.deep.benchmarks import DeepVisionBenchmark
+
+    return DeepVisionBenchmark(config)
+
+
+def _deep_sequence(config: BaseExperimentConfig) -> Experiment:
+    if not isinstance(config, DeepSequenceBenchmarkConfig):
+        raise TypeError("deep_sequence_benchmark requires DeepSequenceBenchmarkConfig")
+    from learning_atlas.deep.benchmarks import DeepSequenceBenchmark
+
+    return DeepSequenceBenchmark(config)
+
+
+def _deep_autoencoder(config: BaseExperimentConfig) -> Experiment:
+    if not isinstance(config, DeepAutoencoderBenchmarkConfig):
+        raise TypeError("deep_autoencoder_benchmark requires DeepAutoencoderBenchmarkConfig")
+    from learning_atlas.deep.benchmarks import DeepAutoencoderBenchmark
+
+    return DeepAutoencoderBenchmark(config)
+
+
 REGISTRY: dict[str, ExperimentSpec] = {
     "regression_benchmark": ExperimentSpec(
         name="regression_benchmark",
@@ -138,6 +174,30 @@ REGISTRY: dict[str, ExperimentSpec] = {
         paradigm=LearningParadigm.UNSUPERVISED,
         description="From-scratch PCA and transductive t-SNE representation evidence.",
         factory=_scratch_representation,
+    ),
+    "scratch_mlp_benchmark": ExperimentSpec(
+        name="scratch_mlp_benchmark",
+        paradigm=LearningParadigm.DEEP,
+        description="NumPy reverse-mode autograd and nonlinear MLP evidence.",
+        factory=_scratch_mlp,
+    ),
+    "deep_vision_benchmark": ExperimentSpec(
+        name="deep_vision_benchmark",
+        paradigm=LearningParadigm.DEEP,
+        description="Compact CNN versus dense image baseline on bundled digits.",
+        factory=_deep_vision,
+    ),
+    "deep_sequence_benchmark": ExperimentSpec(
+        name="deep_sequence_benchmark",
+        paradigm=LearningParadigm.DEEP,
+        description="Packed LSTM versus position-bound MLP on temporal XOR.",
+        factory=_deep_sequence,
+    ),
+    "deep_autoencoder_benchmark": ExperimentSpec(
+        name="deep_autoencoder_benchmark",
+        paradigm=LearningParadigm.DEEP,
+        description="Bottleneck representation and reconstruction-anomaly evidence.",
+        factory=_deep_autoencoder,
     ),
     "q_learning_frozen_lake": ExperimentSpec(
         name="q_learning_frozen_lake",
