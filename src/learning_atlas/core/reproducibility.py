@@ -93,6 +93,7 @@ def environment_metadata() -> dict[str, JsonValue]:
         "pydantic",
         "PyYAML",
         "scikit-learn",
+        "torch",
         "typer",
     ):
         try:

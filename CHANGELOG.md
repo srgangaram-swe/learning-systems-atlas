@@ -5,6 +5,39 @@ the project uses [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-19
+
+### Added
+
+- NumPy-only tensor reverse-mode autodiff with broadcasting-aware gradients,
+  graph reuse, finite-difference checks, and a nonlinear MLP trained with
+  deterministic minibatch SGD and momentum.
+- A typed PyTorch Trainer with CPU/device handling, validation-based early
+  stopping, finite loss/gradient/state guards, best-weight restoration,
+  deterministic shuffling, versioned safe-load checkpoints, and exact resume.
+- Validation-selected CNN-versus-MLP image classification, packed-LSTM
+  variable-length sequence classification, and bottleneck-autoencoder anomaly
+  and representation studies with honest baselines and untouched-test evidence.
+- An atomic four-study `benchmark-deep` workflow with aggregate reports,
+  checkpoint/model artifacts, and 15 optimization, comparison, masking,
+  reconstruction, latent-space, and failure-revealing plots.
+- Comprehensive deep-learning unit and integration coverage for mathematical
+  identities, shapes/dtypes, malformed state, numerical failures, checkpoint
+  compatibility, deterministic replay, CLI/registry dispatch, and transaction
+  cleanup.
+- Generative AI & Foundation Model Systems milestone with 24 assigned work items
+  (#98–#121) spanning autoregressive, variational, adversarial, flow/score, and
+  diffusion families plus adaptation, evaluation, inference, safety, and
+  portable single-/distributed-device training contracts.
+
+### Changed
+
+- Added the explicit deep-learning paradigm and PyTorch CPU dependency to the
+  typed configuration, registry, provenance, package, and CI surface.
+- Enforced the raw branch-edge coverage floor explicitly in local and CI gates.
+- Prepared package and citation metadata for version `0.4.0` and promoted
+  Sprint 4's measured CPU evidence and limitations throughout the portfolio.
+
 ## [0.3.0] - 2026-07-19
 
 ### Added

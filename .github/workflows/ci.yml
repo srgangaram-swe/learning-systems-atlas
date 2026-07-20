@@ -82,3 +82,8 @@ jobs:
           --cov=learning_atlas
           --cov-report=term-missing
           --cov-report=xml
+
+      - name: Enforce raw branch coverage floor
+        run: >-
+          uv run --no-sync --python ${{ matrix.python-version }} python
+          scripts/check_branch_coverage.py coverage.xml --minimum 90

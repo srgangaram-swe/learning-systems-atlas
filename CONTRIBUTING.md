@@ -56,8 +56,8 @@ make check
 ```
 
 This verifies the lock, formatting, linting, strict types, unit/integration
-tests with branch coverage, and package builds. Subset commands are available as
-`make unit`, `make integration`, and `make quality`.
+tests, the raw branch-edge coverage floor, and package builds. Subset commands
+are available as `make unit`, `make integration`, and `make quality`.
 
 ## Commits and pull requests
 

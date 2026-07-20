@@ -5,10 +5,14 @@ import pytest
 from learning_atlas.core.config import (
     ClassificationBenchmarkConfig,
     ClusteringBenchmarkConfig,
+    DeepAutoencoderBenchmarkConfig,
+    DeepSequenceBenchmarkConfig,
+    DeepVisionBenchmarkConfig,
     QLearningConfig,
     RegressionBenchmarkConfig,
     ScratchClassificationBenchmarkConfig,
     ScratchClusteringBenchmarkConfig,
+    ScratchMLPBenchmarkConfig,
     ScratchRegressionBenchmarkConfig,
     ScratchRepresentationBenchmarkConfig,
 )
@@ -27,6 +31,10 @@ def test_registry_covers_every_committed_experiment() -> None:
         ClusteringBenchmarkConfig(),
         ScratchClusteringBenchmarkConfig(),
         ScratchRepresentationBenchmarkConfig(),
+        ScratchMLPBenchmarkConfig(),
+        DeepVisionBenchmarkConfig(),
+        DeepSequenceBenchmarkConfig(),
+        DeepAutoencoderBenchmarkConfig(),
         QLearningConfig(),
     )
     assert {config.experiment for config in configs} == set(REGISTRY)
@@ -37,6 +45,7 @@ def test_registry_metadata_is_discoverable() -> None:
     assert {spec.paradigm.value for spec in REGISTRY.values()} == {
         "supervised",
         "unsupervised",
+        "deep",
         "reinforcement",
     }
     assert all(spec.description.endswith(".") for spec in REGISTRY.values())
