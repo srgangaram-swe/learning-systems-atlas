@@ -332,3 +332,48 @@ def log_loss(
         raise ValueError(msg) from error
     selected = probability_array[np.arange(len(observed_validated)), column_indices]
     return float(-np.mean(np.log(np.clip(selected, epsilon, 1.0 - epsilon))))
+
+
+def binary_roc_curve(
+    observed: ArrayLike, scores: ArrayLike
+) -> tuple[FloatArray, FloatArray, FloatArray]:
+    """Return (false positive rates, true positive rates, descending thresholds).
+
+    Observed targets must contain exactly the labels ``{0, 1}`` with at least one
+    of each; scores are any finite ranking statistic where larger means more
+    positive. Ties share one operating point, so the curve is exact rather than
+    sample-interpolated.
+    """
+
+    observed_validated, score_array = _paired_targets(observed, scores)
+    label_values = np.unique(observed_validated)
+    if not np.array_equal(label_values, np.asarray([0.0, 1.0])):
+        msg = "binary_roc_curve requires observed labels {0, 1} with both classes present"
+        raise ValueError(msg)
+
+    order = np.argsort(-score_array, kind="stable")
+    sorted_scores = score_array[order]
+    sorted_labels = observed_validated[order]
+    threshold_indices = np.append(
+        np.flatnonzero(sorted_scores[:-1] != sorted_scores[1:]),
+        len(order) - 1,
+    )
+    true_positives = np.cumsum(sorted_labels)[threshold_indices]
+    false_positives = threshold_indices + 1.0 - true_positives
+    total_positives = float(np.sum(sorted_labels))
+    total_negatives = float(len(sorted_labels)) - total_positives
+    true_positive_rates = np.concatenate([[0.0], true_positives / total_positives])
+    false_positive_rates = np.concatenate([[0.0], false_positives / total_negatives])
+    thresholds = np.concatenate([[np.inf], sorted_scores[threshold_indices]])
+    return (
+        np.asarray(false_positive_rates, dtype=np.float64),
+        np.asarray(true_positive_rates, dtype=np.float64),
+        np.asarray(thresholds, dtype=np.float64),
+    )
+
+
+def roc_auc_score(observed: ArrayLike, scores: ArrayLike) -> float:
+    """Return the exact trapezoidal area under the binary ROC curve."""
+
+    false_positive_rates, true_positive_rates, _ = binary_roc_curve(observed, scores)
+    return float(np.trapezoid(true_positive_rates, false_positive_rates))

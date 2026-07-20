@@ -11,6 +11,7 @@ core ────────────────┐
   ▲                  │
   ├── supervised ────┤
   ├── unsupervised ──┼── workflows ── CLI
+  ├── deep ──────────┤
   └── reinforcement ─┤
                      ▼
                   reporting
@@ -21,6 +22,7 @@ core ────────────────┐
 | `core` | config schemas, experiment/result contracts, validation, provenance, runner, artifacts | paradigm-specific training logic |
 | `supervised` | NumPy-only estimators, metrics/data/preprocessing, split-safe comparisons | CLI or filesystem orchestration |
 | `unsupervised` | feature-only fitting, internal selection, retrospective external metrics | using targets in fit/selection |
+| `deep` | NumPy autodiff/MLP, PyTorch Trainer, CNN/LSTM/autoencoder modules, validation-safe comparisons | CLI orchestration or test-driven candidate selection |
 | `reinforcement` | agent update, exploration schedule, environment interaction, policy evaluation | global random state or training/evaluation coupling |
 | `reporting` | deterministic plot publication | model selection or metric computation |
 | `workflows` | multi-config orchestration and suite-level transaction | domain algorithms |
@@ -82,6 +84,31 @@ This ordering is enforced in the experiment boundary and tested by replacing or
 permuting labels while requiring selected models, internal scores, seeds, and
 label-free artifacts to remain unchanged.
 
+Sprint 4 deliberately has two implementation layers:
+
+```text
+NumPy tensor graph → reverse-mode autodiff → linear/activation/loss modules → scratch MLP
+
+validated tensor datasets → shared PyTorch Trainer → CNN / packed LSTM / autoencoder
+                                            ↓
+                             checkpoint + metrics + diagnostics
+```
+
+The from-scratch layer demonstrates graph construction, topological backward
+propagation, broadcasting reductions, and optimizer mechanics without importing
+PyTorch or scikit-learn. The PyTorch layer demonstrates system ownership:
+device placement, deterministic shuffling, finite loss/gradient/state checks,
+early stopping, best-weight restoration, versioned safe-load checkpoints, and
+exact same-platform resume. Models remain ordinary `nn.Module` objects; task
+semantics enter through small objective protocols rather than model-specific
+training loops.
+
+Every deep benchmark forms train, validation, and test partitions before fitting.
+Candidate selection and early stopping use validation evidence only. Direct
+inference follows the model device, while the committed reference configuration
+pins CPU for deterministic, network-independent CI. This is a single-device
+contract, not an implicit claim of distributed or accelerator support.
+
 ## Execution transaction
 
 ```mermaid
@@ -104,10 +131,10 @@ sequenceDiagram
 Failures remove staging state. A non-empty target is never overwritten. The
 multi-experiment workflow preflights every config and duplicate name before it
 starts, then publishes the entire suite with the same transaction pattern.
-The Sprint 2 and Sprint 3 benchmark workflows nest their supervised or
-unsupervised study runs in another staging root, validate the exact experiment
-set, add aggregate JSON/CSV/Markdown reports, hash the complete nested
-publication in an aggregate manifest, and publish all-or-nothing.
+The Sprint 2, Sprint 3, and Sprint 4 benchmark workflows nest their supervised,
+unsupervised, or deep study runs in another staging root, validate the exact
+experiment set, add aggregate JSON/CSV/Markdown reports, hash the complete
+nested publication in an aggregate manifest, and publish all-or-nothing.
 
 ## Configuration and discovery
 
@@ -132,3 +159,5 @@ See [ADR-0001](adr/0001-paradigm-native-experiments.md) and
 [ADR-0002](adr/0002-transactional-local-artifacts.md), plus the
 [from-scratch boundary decision](adr/0004-from-scratch-estimator-boundary.md)
 and [label-free unsupervised selection decision](adr/0005-label-free-unsupervised-selection.md).
+Sprint 4's derivations, checkpoint format, selection boundary, and operational
+limits are documented in the [deep-learning engineering notes](sprint-04.md).

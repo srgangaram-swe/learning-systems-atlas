@@ -5,3 +5,4 @@
 - [ADR-0003: Start with network-free reference profiles](0003-network-free-reference-profiles.md)
 - [ADR-0004: Enforce an auditable from-scratch estimator boundary](0004-from-scratch-estimator-boundary.md)
 - [ADR-0005: Keep unsupervised selection label-free](0005-label-free-unsupervised-selection.md)
+- [ADR-0006: Define deep-learning training and evaluation boundaries](0006-deep-learning-training-and-evaluation-boundaries.md)

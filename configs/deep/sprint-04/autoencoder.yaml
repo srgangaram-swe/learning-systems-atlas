@@ -1,0 +1,13 @@
+experiment: deep_autoencoder_benchmark
+seed: 42
+n_samples: 1200
+hidden_units: 32
+latent_dim: 8
+anomaly_fraction: 0.50
+validation_fraction: 0.16
+test_fraction: 0.20
+max_epochs: 60
+batch_size: 64
+learning_rate: 0.003
+patience: 8
+device: cpu

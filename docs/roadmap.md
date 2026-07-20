@@ -1,6 +1,6 @@
 # Roadmap
 
-The roadmap is maintained as assigned GitHub issues grouped into eight milestones.
+The roadmap is maintained as assigned GitHub issues grouped into nine milestones.
 Each milestone is a coherent capability increment, not a checklist of unrelated
 algorithms.
 
@@ -30,9 +30,11 @@ failure cases.
 
 ## Sprint 4 — Deep learning
 
-A minimal reverse-mode autograd engine to demonstrate fundamentals, followed by
-a production-shaped PyTorch training loop and tested MLP, CNN, LSTM, and
-autoencoder studies.
+Completed in version `0.4.0`: a NumPy reverse-mode autograd engine and nonlinear
+MLP, followed by a deterministic/checkpointable PyTorch Trainer and
+validation-selected CNN, packed LSTM, and bottleneck-autoencoder studies. The
+transactional CPU reference publishes 15 plots and preserves untouched-test boundaries,
+resume state, numerical failures, masking invariants, and baseline comparisons.
 
 [Milestone](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/4)
 
@@ -81,6 +83,25 @@ analytical or simulated results are never described as measured cluster speedups
 
 [Milestone](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/15)
 
+## Sprint 9 — Generative AI & foundation model systems
+
+Twenty-four assigned work items (#98–#121) define a production-shaped generative
+AI slice spanning generative modeling foundations, tokenization and attention,
+autoregressive/sequence-to-sequence transformers, variational and adversarial
+models, normalizing-flow and energy/score perspectives, diffusion models and
+their sampling variants, parameter-efficient adaptation, retrieval/tool
+boundaries, evaluation, inference efficiency, observability, safety, and an
+end-to-end evidence suite.
+
+Every model family must have explicit mathematical and data contracts,
+actionable failure handling, deterministic unit tests, public-API/config/CLI
+integration tests, and CPU-capable smoke profiles. Training interfaces must
+support one-device execution and define sharding/checkpoint boundaries that can
+later integrate with Sprint 8; no multi-node, frontier-scale, quality, cost, or
+speedup claim is complete without measured hardware evidence and provenance.
+
+[Milestone](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/16)
+
 ## Definition of done
 
 An implementation work item is complete only when it has typed APIs, explicit
@@ -90,3 +111,8 @@ controls, reproducible artifacts/plots, limitations, and all CI gates passing.
 An algorithms work item additionally requires a machine-linked proof artifact
 covering preconditions, postconditions, termination, correctness, and time/space
 complexity. Empirical tests support a proof; they never substitute for one.
+
+A generative or distributed work item additionally requires explicit data
+licensing/provenance, checkpoint compatibility, numerical-failure behavior,
+single-device tests, distributed-equivalence tests where applicable, evaluation
+limitations, and security/abuse considerations appropriate to the capability.

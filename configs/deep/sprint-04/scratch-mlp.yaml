@@ -1,0 +1,14 @@
+experiment: scratch_mlp_benchmark
+seed: 42
+n_samples: 320
+xor_noise: 0.15
+moons_noise: 0.10
+hidden_units: 16
+activation: tanh
+learning_rate: 0.30
+momentum: 0.90
+batch_size: 32
+max_epochs: 300
+validation_fraction: 0.20
+test_size: 0.25
+gradient_check_samples: 16
