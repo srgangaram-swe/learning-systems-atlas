@@ -6,14 +6,16 @@ production codebase's review and evidence standards.
 ## Branching model
 
 ```text
-prod  ←  main  ←  dev  ←  feat/<topic>
+main  ←  prod  ←  dev  ←  feat/<topic>
 ```
 
 - `feat/*` branches are cut from `dev`, scoped to one work item or sprint, and
   merged into `dev` through a pull request. They are deleted after merge.
 - `dev` is the integration branch. Required CI must be green before merge.
-- `main` receives validated release candidates from `dev`.
-- `prod` receives tagged releases from `main`.
+- `prod` receives validated release candidates from `dev`.
+- `main` receives released history from `prod`.
+- Normal work is squash-merged into `dev`; promotions retain merge commits.
+  All required checks and branch protections remain intact.
 
 ## Environment
 

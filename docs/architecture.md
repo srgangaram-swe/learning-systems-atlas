@@ -111,6 +111,14 @@ contract, not an implicit claim of distributed or accelerator support.
 
 ## Execution transaction
 
+Sprint 5 keeps RL interaction native while sharing `Trainer.train_batch` and
+`BatchObjective` with the deep-learning optimizer path. Exact MDPs and tabular
+updates remain NumPy domain logic; control adapters own Gymnasium interaction;
+REINFORCE/PPO own on-policy rollouts; DQN owns replay, target synchronization,
+and episode-boundary recovery. The [RL laboratory](reinforcement-learning.md)
+and [ADR-0007](adr/0007-reinforcement-interaction-and-evidence-boundaries.md)
+document the mathematics, trust boundaries, selection streams, and limits.
+
 ```mermaid
 sequenceDiagram
     participant Client

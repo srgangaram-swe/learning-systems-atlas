@@ -352,7 +352,7 @@ The repository has nine assigned milestones and 103 scoped work items:
 9. [Generative AI & foundation model systems](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/16)
 
 Feature branches are cut from `dev`, validated through pull requests, and
-deleted after merge. Release candidates flow `dev → main → prod`. See
+deleted after merge. Release candidates flow `dev → prod → main`. See
 [CONTRIBUTING.md](CONTRIBUTING.md) and the detailed [roadmap](docs/roadmap.md).
 
 ## Honest limitations
