@@ -7,5 +7,5 @@
 *.joblib binary
 *.npz binary
 # Preserve byte-level reference hashes across checkout line-ending normalization.
-docs/assets/sprint-05/comparison.csv -text
+docs/assets/sprint-05/comparison.csv -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/assets/sprint-05/*.json linguist-generated=true
