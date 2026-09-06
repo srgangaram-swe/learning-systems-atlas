@@ -1,4 +1,4 @@
-.PHONY: bootstrap format quality unit test integration check demo demo-sprint2 demo-sprint3 demo-sprint4 build
+.PHONY: bootstrap format quality unit test integration check demo demo-sprint2 demo-sprint3 demo-sprint4 demo-sprint5 build
 
 bootstrap:
 	uv sync --locked --all-groups
@@ -45,6 +45,11 @@ demo-sprint4:
 	uv run learning-atlas benchmark-deep \
 		--config-dir configs/deep/sprint-04 \
 		--output-dir runs/sprint-04
+
+demo-sprint5:
+	uv run learning-atlas benchmark-reinforcement \
+		configs/reinforcement/sprint-05/reinforcement.yaml \
+		--output-dir runs/sprint-05
 
 build:
 	uv build

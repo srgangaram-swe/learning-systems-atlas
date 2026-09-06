@@ -5,6 +5,7 @@
 
 # Local agent operating context (intentionally not published)
 /AGENTS.md
+/ai.md
 
 # Python
 __pycache__/

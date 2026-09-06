@@ -40,8 +40,12 @@ resume state, numerical failures, masking invariants, and baseline comparisons.
 
 ## Sprint 5 — Reinforcement learning
 
-Bandits, value/policy iteration, tabular Q-learning/SARSA, REINFORCE, and DQN
-with multi-seed evaluation, confidence intervals, and sample-efficiency analysis.
+Bandits, exact Gridworld modeling, value/policy iteration, tabular Q-learning/SARSA,
+REINFORCE, DQN, and PPO-Clip/GAE with independent multi-seed evaluation,
+checkpoint recovery, failure diagnostics, and sample-efficiency analysis.
+See the [laboratory contract](reinforcement-learning.md). Sprint closure requires
+merged evidence, green CI, and protected release promotions; implementation alone
+does not imply a completed release.
 
 [Milestone](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/5)
 
@@ -49,7 +53,7 @@ with multi-seed evaluation, confidence intervals, and sample-efficiency analysis
 
 Reference comparisons, guided notebooks as thin package clients, model cards,
 API documentation, portfolio polish, release automation, and promotion through
-`dev → main → prod`.
+`dev → prod → main`.
 
 [Milestone](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/6)
 

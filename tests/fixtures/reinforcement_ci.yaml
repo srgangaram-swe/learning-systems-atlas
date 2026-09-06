@@ -1,0 +1,13 @@
+experiment: reinforcement_benchmark
+seed: 42
+repetitions: 1
+bandit_steps: 100
+tabular_episodes: 100
+reinforce_episodes: 16
+dqn_episodes: 16
+ppo_episodes: 16
+control_max_steps: 50
+validation_episodes: 2
+test_episodes: 3
+variance_episodes: 2
+dqn_ablations: true

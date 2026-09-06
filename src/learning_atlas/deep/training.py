@@ -50,11 +50,15 @@ class DeepTrainingError(RuntimeError):
     """Raised when a training run violates its numerical or state contracts."""
 
 
-class Objective(Protocol):
-    """Task-specific loss and evaluation metrics used by the shared Trainer."""
+class BatchObjective(Protocol):
+    """Task-specific differentiable loss at the shared numerical-step boundary."""
 
     def loss(self, model: nn.Module, batch: Batch) -> torch.Tensor:
         """Return the mean minibatch loss."""
+
+
+class Objective(BatchObjective, Protocol):
+    """Dataset objective with auxiliary evaluation metrics."""
 
     def evaluation_metrics(self, model: nn.Module, batches: Iterator[Batch]) -> dict[str, float]:
         """Return auxiliary metrics for an evaluation pass."""
@@ -686,7 +690,7 @@ def _require_finite_gradients(model: nn.Module, *, epoch: int) -> None:
 
 
 def _objective_loss(
-    objective: Objective,
+    objective: BatchObjective,
     model: nn.Module,
     batch: Batch,
     *,
@@ -788,6 +792,61 @@ class Trainer:
             weight_decay=self._config.weight_decay,
         )
 
+    def create_optimizer(self, model: nn.Module) -> torch.optim.Optimizer:
+        """Create owned optimizer state for a paradigm-native interaction loop.
+
+        The caller places the model on ``device`` before creating the optimizer.
+        RL owns interaction/replay scheduling; the Trainer owns numerical updates.
+        """
+
+        _require_finite_model_state(model, context="initial model")
+        return self._build_optimizer(model)
+
+    def train_batch(
+        self,
+        model: nn.Module,
+        optimizer: torch.optim.Optimizer,
+        batch: Batch,
+        objective: BatchObjective,
+        *,
+        step: int,
+    ) -> float:
+        """One checked update shared by dataset epochs and RL minibatches.
+
+        Reject invalid losses/gradients before stepping. An optimizer failure is
+        fatal to the owned run; this method does not promise update rollback.
+        ``step`` labels diagnostics and must be a positive integer.
+        """
+
+        if isinstance(step, bool) or not isinstance(step, int) or step < 1:
+            raise ValueError("step must be a positive integer")
+        model.train()
+        moved = _batch_to_device(batch, self._device)
+        optimizer.zero_grad(set_to_none=True)
+        loss = _objective_loss(objective, model, moved, context=f"training loss at epoch {step}")
+        scalar = _finite_scalar(loss, context=f"training loss at epoch {step}")
+        try:
+            loss.backward()  # type: ignore[no-untyped-call]
+        except RuntimeError as error:
+            msg = f"gradient/backward pass failed at epoch {step}: {error}"
+            raise DeepTrainingError(msg) from error
+        _require_finite_gradients(model, epoch=step)
+        if self._config.grad_clip_norm is not None:
+            try:
+                nn.utils.clip_grad_norm_(
+                    model.parameters(), self._config.grad_clip_norm, error_if_nonfinite=True
+                )
+            except RuntimeError as error:
+                msg = f"gradient clipping failed at epoch {step}: {error}"
+                raise DeepTrainingError(msg) from error
+        try:
+            optimizer.step()
+        except (RuntimeError, TypeError, ValueError) as error:
+            msg = f"optimizer step failed at epoch {step}: {error}"
+            raise DeepTrainingError(msg) from error
+        _require_finite_model_state(model, context=f"optimizer step at epoch {step}")
+        return scalar
+
     def _preflight_dataset(
         self,
         model: nn.Module,
@@ -836,36 +895,7 @@ class Trainer:
         total_examples = 0
         for batch in loader:
             moved = _batch_to_device(batch, self._device)
-            optimizer.zero_grad(set_to_none=True)
-            loss = _objective_loss(
-                objective,
-                model,
-                moved,
-                context=f"training loss at epoch {epoch}",
-            )
-            scalar = _finite_scalar(loss, context=f"training loss at epoch {epoch}")
-            try:
-                loss.backward()  # type: ignore[no-untyped-call]
-            except RuntimeError as error:
-                msg = f"gradient/backward pass failed at epoch {epoch}: {error}"
-                raise DeepTrainingError(msg) from error
-            _require_finite_gradients(model, epoch=epoch)
-            if self._config.grad_clip_norm is not None:
-                try:
-                    nn.utils.clip_grad_norm_(
-                        model.parameters(),
-                        self._config.grad_clip_norm,
-                        error_if_nonfinite=True,
-                    )
-                except RuntimeError as error:
-                    msg = f"gradient clipping failed at epoch {epoch}: {error}"
-                    raise DeepTrainingError(msg) from error
-            try:
-                optimizer.step()
-            except (RuntimeError, TypeError, ValueError) as error:
-                msg = f"optimizer step failed at epoch {epoch}: {error}"
-                raise DeepTrainingError(msg) from error
-            _require_finite_model_state(model, context=f"optimizer step at epoch {epoch}")
+            scalar = self.train_batch(model, optimizer, moved, objective, step=epoch)
             batch_examples = int(moved[0].shape[0])
             total_loss += scalar * batch_examples
             total_examples += batch_examples

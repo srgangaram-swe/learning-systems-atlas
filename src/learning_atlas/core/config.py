@@ -279,6 +279,38 @@ class QLearningConfig(BaseExperimentConfig):
         return self
 
 
+class ReinforcementBenchmarkConfig(BaseExperimentConfig):
+    """Bounded multi-seed Sprint 5 laboratory, with a permanently separate test stream."""
+
+    experiment: Literal["reinforcement_benchmark"] = "reinforcement_benchmark"
+    repetitions: int = Field(default=3, ge=1, le=20)
+    bandit_steps: int = Field(default=2000, ge=10, le=100_000)
+    tabular_episodes: int = Field(default=1500, ge=10, le=10_000)
+    reinforce_episodes: int = Field(default=2000, ge=8, le=4000)
+    dqn_episodes: int = Field(default=800, ge=8, le=4000)
+    ppo_episodes: int = Field(default=300, ge=8, le=4000)
+    control_max_steps: int = Field(default=500, ge=10, le=500)
+    validation_episodes: int = Field(default=10, ge=1, le=100)
+    test_episodes: int = Field(default=100, ge=2, le=500)
+    variance_episodes: int = Field(default=32, ge=2, le=128)
+    dqn_ablations: bool = True
+
+    @model_validator(mode="after")
+    def bound_total_interactions(self) -> Self:
+        """Bound the combined run, not merely each individual candidate."""
+
+        dqn_factor = 4 if self.dqn_ablations else 1
+        neural = (
+            self.repetitions
+            * self.control_max_steps
+            * (self.reinforce_episodes + dqn_factor * self.dqn_episodes + self.ppo_episodes)
+        )
+        tabular = self.repetitions * self.tabular_episodes * 4 * 500
+        if neural > 20_000_000 or tabular > 30_000_000:
+            raise ValueError("combined reinforcement interaction budget is too large")
+        return self
+
+
 ExperimentConfig = Annotated[
     RegressionBenchmarkConfig
     | ClassificationBenchmarkConfig
@@ -291,7 +323,8 @@ ExperimentConfig = Annotated[
     | DeepVisionBenchmarkConfig
     | DeepSequenceBenchmarkConfig
     | DeepAutoencoderBenchmarkConfig
-    | QLearningConfig,
+    | QLearningConfig
+    | ReinforcementBenchmarkConfig,
     Field(discriminator="experiment"),
 ]
 

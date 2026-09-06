@@ -10,6 +10,7 @@ from learning_atlas.core.config import (
     DeepVisionBenchmarkConfig,
     QLearningConfig,
     RegressionBenchmarkConfig,
+    ReinforcementBenchmarkConfig,
     ScratchClassificationBenchmarkConfig,
     ScratchClusteringBenchmarkConfig,
     ScratchMLPBenchmarkConfig,
@@ -36,6 +37,7 @@ def test_registry_covers_every_committed_experiment() -> None:
         DeepSequenceBenchmarkConfig(),
         DeepAutoencoderBenchmarkConfig(),
         QLearningConfig(),
+        ReinforcementBenchmarkConfig(),
     )
     assert {config.experiment for config in configs} == set(REGISTRY)
     assert all(isinstance(build_experiment(config), Experiment) for config in configs)

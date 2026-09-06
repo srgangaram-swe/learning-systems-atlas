@@ -14,9 +14,11 @@ from learning_atlas.core.runner import run_experiment
 from learning_atlas.deep.autograd import AutogradError
 from learning_atlas.deep.mlp import MLPTrainingError
 from learning_atlas.deep.training import DeepTrainingError
+from learning_atlas.reinforcement.validation import ReinforcementError
 from learning_atlas.supervised.comparison import CandidateExecutionError
 from learning_atlas.unsupervised.comparison import UnsupervisedCandidateError
 from learning_atlas.workflows.deep_benchmark import run_deep_benchmark
+from learning_atlas.workflows.reinforcement_benchmark import run_reinforcement_benchmark
 from learning_atlas.workflows.suite import run_suite
 from learning_atlas.workflows.supervised_benchmark import run_supervised_benchmark
 from learning_atlas.workflows.unsupervised_benchmark import run_unsupervised_benchmark
@@ -93,6 +95,7 @@ def run(
     try:
         result = run_experiment(load_config(config_path), output_dir)
     except (
+        ReinforcementError,
         AutogradError,
         DeepTrainingError,
         MLPTrainingError,
@@ -117,6 +120,7 @@ def run_all(
     try:
         results = run_suite(config_dir, output_dir)
     except (
+        ReinforcementError,
         AutogradError,
         DeepTrainingError,
         MLPTrainingError,
@@ -216,6 +220,21 @@ def benchmark_deep(
         for result in results
     }
     typer.echo(json.dumps(summary, indent=2, sort_keys=True))
+
+
+@app.command("benchmark-reinforcement")
+def benchmark_reinforcement(
+    config_path: Annotated[Path, typer.Argument(exists=True, dir_okay=False, readable=True)],
+    output_dir: Annotated[Path, typer.Option("--output-dir", "-o")],
+) -> None:
+    """Run the offline Sprint 5 laboratory and atomically publish all evidence."""
+
+    try:
+        result = run_reinforcement_benchmark(config_path, output_dir)
+    except (OSError, ValueError, ReinforcementError, DeepTrainingError) as error:
+        typer.echo(f"reinforcement benchmark failed: {error}", err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(result.model_dump(mode="json"), indent=2, sort_keys=True))
 
 
 def main() -> None:
