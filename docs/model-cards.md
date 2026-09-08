@@ -15,7 +15,8 @@ they exclude input/output storage where stated and are not measured speed claims
 | Family | Training/work upper bound | Inference/query bound | Principal fitted/working memory |
 | --- | --- | --- | --- |
 | Mean/prior baselines | O(nd) including validation | O(q) labels; O(qK) probabilities | O(K) |
-| OLS/Ridge | O(nd min(n,d)) dense least squares | O(qd) | O(nd+d²) dense workspace |
+| OLS; Ridge with alpha=0 | O(nd min(n,d)) dense least squares | O(qd) | O(nd+d²) conservative dense workspace |
+| Ridge with alpha>0 | O(nd²+d³), Gram construction and dense solve | O(qd) | O(nd+d²) |
 | Gradient linear/logistic models | O(Ind) | O(qd) | O(nd+d) |
 | Lasso coordinate descent | O(Ind) | O(qd) | O(nd+d) |
 | CART regression/classification | O(Ddn log n), conservative repeated-sort bound | O(qD) | O(nd+nK), including classification scores |
@@ -48,8 +49,11 @@ only. Evidence: Sprint 1/2 held-out comparisons. Reference:
 ## Linear least squares and Ridge
 
 Minimize squared residuals, with Ridge adding alpha times squared coefficient
-norm. Dense least-squares formulations avoid explicit matrix inversion; the
-intercept is treated separately. Collinearity affects identifiability; Ridge
+norm. OLS and zero-penalty Ridge use dense least squares. Positive-penalty Ridge
+forms the d-by-d regularized Gram matrix and solves its linear system; it does not
+explicitly invert that matrix. This costs O(nd²+d³), including when d exceeds n,
+and forming normal equations can worsen conditioning. The intercept is treated
+separately. Collinearity affects identifiability; Ridge
 trades bias for stability and depends on scale. Gradient descent has an explicit
 convergence budget. Evidence: Sprint 2 and fixed-seed Sprint 6 oracle reports.
 Reference: [linear models](https://scikit-learn.org/stable/modules/linear_model.html).
