@@ -19,8 +19,22 @@ reference experiment has a typed configuration, explicit seed streams, a
 declared selection/evaluation boundary, versioned artifacts, diagnostics, and
 unit plus integration tests. Supervised and RL studies include naive baselines;
 unsupervised studies expose internal criteria and retrospective truth separately.
-Production logic lives in a typed `src` package; notebooks are reserved for later
-presentation layers.
+Production logic lives in a typed `src` package; the three executable notebooks
+are thin presentation clients of the same tested runner.
+
+## v1.0 documentation and reference qualification
+
+Explore the [documentation site](https://srgangaram-swe.github.io/learning-systems-atlas/),
+[family model cards and complexity bounds](docs/model-cards.md),
+[source-derived API reference](docs/api/index.md), and [guided notebooks](docs/notebooks.md).
+
+The [Sprint 6 reference study](docs/sprint-06.md) compares nine fixed model pairs
+with scikit-learn over three seeds. **25 of 27 held-out prediction-agreement
+checks pass.** Two CART fits choose equivalent training partitions through
+different feature thresholds and disagree on new rows; those failures and their
+losses remain visible. No tolerance was enlarged to manufacture parity.
+Timings are local observations, not a speedup guarantee. v1.0 is a documented
+research release, not a claim of production model qualification.
 
 > [!NOTE]
 > This is a personal engineering and research portfolio built entirely from

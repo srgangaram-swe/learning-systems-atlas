@@ -26,3 +26,4 @@ coverage.xml
 # Generated experiment outputs
 artifacts/
 runs/
+site/

@@ -1,0 +1,747 @@
+[
+  {
+    "module": "learning_atlas.core.artifacts",
+    "class": "ArtifactStore",
+    "page": "learning_atlas-core-artifacts.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "StrictConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "BaseExperimentConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "RegressionBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "ClassificationBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "ScratchRegressionBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "ScratchClassificationBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "ClusteringBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "ScratchClusteringBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "ScratchRepresentationBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "ScratchMLPBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "DeepVisionBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "DeepSequenceBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "DeepAutoencoderBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "QLearningConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.config",
+    "class": "ReinforcementBenchmarkConfig",
+    "page": "learning_atlas-core-config.md"
+  },
+  {
+    "module": "learning_atlas.core.contracts",
+    "class": "LearningParadigm",
+    "page": "learning_atlas-core-contracts.md"
+  },
+  {
+    "module": "learning_atlas.core.contracts",
+    "class": "SourceKind",
+    "page": "learning_atlas-core-contracts.md"
+  },
+  {
+    "module": "learning_atlas.core.contracts",
+    "class": "ContractModel",
+    "page": "learning_atlas-core-contracts.md"
+  },
+  {
+    "module": "learning_atlas.core.contracts",
+    "class": "SourceMetadata",
+    "page": "learning_atlas-core-contracts.md"
+  },
+  {
+    "module": "learning_atlas.core.contracts",
+    "class": "CandidateResult",
+    "page": "learning_atlas-core-contracts.md"
+  },
+  {
+    "module": "learning_atlas.core.contracts",
+    "class": "RunResult",
+    "page": "learning_atlas-core-contracts.md"
+  },
+  {
+    "module": "learning_atlas.core.contracts",
+    "class": "RunContext",
+    "page": "learning_atlas-core-contracts.md"
+  },
+  {
+    "module": "learning_atlas.core.contracts",
+    "class": "Experiment",
+    "page": "learning_atlas-core-contracts.md"
+  },
+  {
+    "module": "learning_atlas.core.estimators",
+    "class": "NotFittedError",
+    "page": "learning_atlas-core-estimators.md"
+  },
+  {
+    "module": "learning_atlas.core.estimators",
+    "class": "Estimator",
+    "page": "learning_atlas-core-estimators.md"
+  },
+  {
+    "module": "learning_atlas.core.estimators",
+    "class": "RegressorMixin",
+    "page": "learning_atlas-core-estimators.md"
+  },
+  {
+    "module": "learning_atlas.core.estimators",
+    "class": "ClassifierMixin",
+    "page": "learning_atlas-core-estimators.md"
+  },
+  {
+    "module": "learning_atlas.core.registry",
+    "class": "ExperimentSpec",
+    "page": "learning_atlas-core-registry.md"
+  },
+  {
+    "module": "learning_atlas.core.reproducibility",
+    "class": "GitState",
+    "page": "learning_atlas-core-reproducibility.md"
+  },
+  {
+    "module": "learning_atlas.deep.autoencoder",
+    "class": "BottleneckAutoencoder",
+    "page": "learning_atlas-deep-autoencoder.md"
+  },
+  {
+    "module": "learning_atlas.deep.autograd",
+    "class": "AutogradError",
+    "page": "learning_atlas-deep-autograd.md"
+  },
+  {
+    "module": "learning_atlas.deep.autograd",
+    "class": "Tensor",
+    "page": "learning_atlas-deep-autograd.md"
+  },
+  {
+    "module": "learning_atlas.deep.benchmarks",
+    "class": "ScratchMLPBenchmark",
+    "page": "learning_atlas-deep-benchmarks.md"
+  },
+  {
+    "module": "learning_atlas.deep.benchmarks",
+    "class": "DeepVisionBenchmark",
+    "page": "learning_atlas-deep-benchmarks.md"
+  },
+  {
+    "module": "learning_atlas.deep.benchmarks",
+    "class": "DeepSequenceBenchmark",
+    "page": "learning_atlas-deep-benchmarks.md"
+  },
+  {
+    "module": "learning_atlas.deep.benchmarks",
+    "class": "DeepAutoencoderBenchmark",
+    "page": "learning_atlas-deep-benchmarks.md"
+  },
+  {
+    "module": "learning_atlas.deep.datasets",
+    "class": "PlanarDataset",
+    "page": "learning_atlas-deep-datasets.md"
+  },
+  {
+    "module": "learning_atlas.deep.datasets",
+    "class": "SequenceDataset",
+    "page": "learning_atlas-deep-datasets.md"
+  },
+  {
+    "module": "learning_atlas.deep.mlp",
+    "class": "MLPTrainingError",
+    "page": "learning_atlas-deep-mlp.md"
+  },
+  {
+    "module": "learning_atlas.deep.mlp",
+    "class": "MLPClassifier",
+    "page": "learning_atlas-deep-mlp.md"
+  },
+  {
+    "module": "learning_atlas.deep.sequence",
+    "class": "SequenceLSTM",
+    "page": "learning_atlas-deep-sequence.md"
+  },
+  {
+    "module": "learning_atlas.deep.sequence",
+    "class": "PaddedSequenceMLP",
+    "page": "learning_atlas-deep-sequence.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "CheckpointPayload",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "DeepTrainingError",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "BatchObjective",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "Objective",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "TrainerConfig",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "EpochRecord",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "TrainingReport",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "Trainer",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "ClassificationObjective",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "SequenceClassificationObjective",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.training",
+    "class": "ReconstructionObjective",
+    "page": "learning_atlas-deep-training.md"
+  },
+  {
+    "module": "learning_atlas.deep.vision",
+    "class": "VisionMLP",
+    "page": "learning_atlas-deep-vision.md"
+  },
+  {
+    "module": "learning_atlas.deep.vision",
+    "class": "CompactCNN",
+    "page": "learning_atlas-deep-vision.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.bandits",
+    "class": "BanditAgent",
+    "page": "learning_atlas-reinforcement-bandits.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.bandits",
+    "class": "BanditTrace",
+    "page": "learning_atlas-reinforcement-bandits.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.benchmark",
+    "class": "LaboratoryEvidence",
+    "page": "learning_atlas-reinforcement-benchmark.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.benchmark",
+    "class": "ReinforcementBenchmark",
+    "page": "learning_atlas-reinforcement-benchmark.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.checkpoints",
+    "class": "TensorRecord",
+    "page": "learning_atlas-reinforcement-checkpoints.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.checkpoints",
+    "class": "AdamRecord",
+    "page": "learning_atlas-reinforcement-checkpoints.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.checkpoints",
+    "class": "RandomRecord",
+    "page": "learning_atlas-reinforcement-checkpoints.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.checkpoints",
+    "class": "ReplayRecord",
+    "page": "learning_atlas-reinforcement-checkpoints.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.checkpoints",
+    "class": "DQNCheckpoint",
+    "page": "learning_atlas-reinforcement-checkpoints.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.checkpoints",
+    "class": "Envelope",
+    "page": "learning_atlas-reinforcement-checkpoints.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.control",
+    "class": "ControlReport",
+    "page": "learning_atlas-reinforcement-control.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.control",
+    "class": "ValidationSelector",
+    "page": "learning_atlas-reinforcement-control.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.dqn",
+    "class": "DQNSession",
+    "page": "learning_atlas-reinforcement-dqn.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.gridworld",
+    "class": "FiniteMDP",
+    "page": "learning_atlas-reinforcement-gridworld.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.gridworld",
+    "class": "Gridworld",
+    "page": "learning_atlas-reinforcement-gridworld.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.neural_config",
+    "class": "ControlConfig",
+    "page": "learning_atlas-reinforcement-neural_config.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.objectives",
+    "class": "ActorCritic",
+    "page": "learning_atlas-reinforcement-objectives.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.objectives",
+    "class": "PolicyObjective",
+    "page": "learning_atlas-reinforcement-objectives.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.objectives",
+    "class": "DQNObjective",
+    "page": "learning_atlas-reinforcement-objectives.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.planning",
+    "class": "PlanningResult",
+    "page": "learning_atlas-reinforcement-planning.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.policy_gradient",
+    "class": "Rollout",
+    "page": "learning_atlas-reinforcement-policy_gradient.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.q_learning",
+    "class": "QLearningAgent",
+    "page": "learning_atlas-reinforcement-q_learning.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.q_learning",
+    "class": "PolicyEvaluation",
+    "page": "learning_atlas-reinforcement-q_learning.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.q_learning",
+    "class": "FrozenLakeBenchmark",
+    "page": "learning_atlas-reinforcement-q_learning.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.replay",
+    "class": "ReplayBuffer",
+    "page": "learning_atlas-reinforcement-replay.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.tabular",
+    "class": "TabularTrace",
+    "page": "learning_atlas-reinforcement-tabular.md"
+  },
+  {
+    "module": "learning_atlas.reinforcement.validation",
+    "class": "ReinforcementError",
+    "page": "learning_atlas-reinforcement-validation.md"
+  },
+  {
+    "module": "learning_atlas.reporting.deep",
+    "class": "DecisionPanel",
+    "page": "learning_atlas-reporting-deep.md"
+  },
+  {
+    "module": "learning_atlas.reporting.parity",
+    "class": "Predictor",
+    "page": "learning_atlas-reporting-parity.md"
+  },
+  {
+    "module": "learning_atlas.reporting.parity",
+    "class": "ParityPair",
+    "page": "learning_atlas-reporting-parity.md"
+  },
+  {
+    "module": "learning_atlas.reporting.parity",
+    "class": "ParityObservation",
+    "page": "learning_atlas-reporting-parity.md"
+  },
+  {
+    "module": "learning_atlas.reporting.supervised",
+    "class": "Predictor",
+    "page": "learning_atlas-reporting-supervised.md"
+  },
+  {
+    "module": "learning_atlas.supervised.baselines",
+    "class": "MeanRegressor",
+    "page": "learning_atlas-supervised-baselines.md"
+  },
+  {
+    "module": "learning_atlas.supervised.baselines",
+    "class": "PriorClassifier",
+    "page": "learning_atlas-supervised-baselines.md"
+  },
+  {
+    "module": "learning_atlas.supervised.classification",
+    "class": "ClassificationData",
+    "page": "learning_atlas-supervised-classification.md"
+  },
+  {
+    "module": "learning_atlas.supervised.classification",
+    "class": "ClassificationBenchmark",
+    "page": "learning_atlas-supervised-classification.md"
+  },
+  {
+    "module": "learning_atlas.supervised.comparison",
+    "class": "CandidateExecutionError",
+    "page": "learning_atlas-supervised-comparison.md"
+  },
+  {
+    "module": "learning_atlas.supervised.comparison",
+    "class": "ProbabilisticClassifier",
+    "page": "learning_atlas-supervised-comparison.md"
+  },
+  {
+    "module": "learning_atlas.supervised.comparison",
+    "class": "FeatureTransformer",
+    "page": "learning_atlas-supervised-comparison.md"
+  },
+  {
+    "module": "learning_atlas.supervised.comparison",
+    "class": "FittedPipeline",
+    "page": "learning_atlas-supervised-comparison.md"
+  },
+  {
+    "module": "learning_atlas.supervised.comparison",
+    "class": "ScratchRegressionBenchmark",
+    "page": "learning_atlas-supervised-comparison.md"
+  },
+  {
+    "module": "learning_atlas.supervised.comparison",
+    "class": "ScratchClassificationBenchmark",
+    "page": "learning_atlas-supervised-comparison.md"
+  },
+  {
+    "module": "learning_atlas.supervised.datasets",
+    "class": "RegressionDataset",
+    "page": "learning_atlas-supervised-datasets.md"
+  },
+  {
+    "module": "learning_atlas.supervised.datasets",
+    "class": "ClassificationDataset",
+    "page": "learning_atlas-supervised-datasets.md"
+  },
+  {
+    "module": "learning_atlas.supervised.datasets",
+    "class": "BlobsDataset",
+    "page": "learning_atlas-supervised-datasets.md"
+  },
+  {
+    "module": "learning_atlas.supervised.ensemble",
+    "class": "RandomForestRegressor",
+    "page": "learning_atlas-supervised-ensemble.md"
+  },
+  {
+    "module": "learning_atlas.supervised.ensemble",
+    "class": "RandomForestClassifier",
+    "page": "learning_atlas-supervised-ensemble.md"
+  },
+  {
+    "module": "learning_atlas.supervised.ensemble",
+    "class": "GradientBoostingRegressor",
+    "page": "learning_atlas-supervised-ensemble.md"
+  },
+  {
+    "module": "learning_atlas.supervised.ensemble",
+    "class": "GradientBoostingClassifier",
+    "page": "learning_atlas-supervised-ensemble.md"
+  },
+  {
+    "module": "learning_atlas.supervised.linear_model",
+    "class": "ConvergenceError",
+    "page": "learning_atlas-supervised-linear_model.md"
+  },
+  {
+    "module": "learning_atlas.supervised.linear_model",
+    "class": "LinearRegression",
+    "page": "learning_atlas-supervised-linear_model.md"
+  },
+  {
+    "module": "learning_atlas.supervised.linear_model",
+    "class": "Ridge",
+    "page": "learning_atlas-supervised-linear_model.md"
+  },
+  {
+    "module": "learning_atlas.supervised.linear_model",
+    "class": "Lasso",
+    "page": "learning_atlas-supervised-linear_model.md"
+  },
+  {
+    "module": "learning_atlas.supervised.linear_model",
+    "class": "LogisticRegression",
+    "page": "learning_atlas-supervised-linear_model.md"
+  },
+  {
+    "module": "learning_atlas.supervised.model_selection",
+    "class": "FoldIndices",
+    "page": "learning_atlas-supervised-model_selection.md"
+  },
+  {
+    "module": "learning_atlas.supervised.naive_bayes",
+    "class": "GaussianNB",
+    "page": "learning_atlas-supervised-naive_bayes.md"
+  },
+  {
+    "module": "learning_atlas.supervised.naive_bayes",
+    "class": "MultinomialNB",
+    "page": "learning_atlas-supervised-naive_bayes.md"
+  },
+  {
+    "module": "learning_atlas.supervised.neighbors",
+    "class": "KNeighborsClassifier",
+    "page": "learning_atlas-supervised-neighbors.md"
+  },
+  {
+    "module": "learning_atlas.supervised.neighbors",
+    "class": "KNeighborsRegressor",
+    "page": "learning_atlas-supervised-neighbors.md"
+  },
+  {
+    "module": "learning_atlas.supervised.preprocessing",
+    "class": "SplitData",
+    "page": "learning_atlas-supervised-preprocessing.md"
+  },
+  {
+    "module": "learning_atlas.supervised.preprocessing",
+    "class": "StandardScaler",
+    "page": "learning_atlas-supervised-preprocessing.md"
+  },
+  {
+    "module": "learning_atlas.supervised.regression",
+    "class": "RegressionData",
+    "page": "learning_atlas-supervised-regression.md"
+  },
+  {
+    "module": "learning_atlas.supervised.regression",
+    "class": "RegressionBenchmark",
+    "page": "learning_atlas-supervised-regression.md"
+  },
+  {
+    "module": "learning_atlas.supervised.svm",
+    "class": "SVMConvergenceError",
+    "page": "learning_atlas-supervised-svm.md"
+  },
+  {
+    "module": "learning_atlas.supervised.svm",
+    "class": "KernelSVMClassifier",
+    "page": "learning_atlas-supervised-svm.md"
+  },
+  {
+    "module": "learning_atlas.supervised.tree",
+    "class": "TreeNode",
+    "page": "learning_atlas-supervised-tree.md"
+  },
+  {
+    "module": "learning_atlas.supervised.tree",
+    "class": "DecisionTreeRegressor",
+    "page": "learning_atlas-supervised-tree.md"
+  },
+  {
+    "module": "learning_atlas.supervised.tree",
+    "class": "DecisionTreeClassifier",
+    "page": "learning_atlas-supervised-tree.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.base",
+    "class": "NotFittedError",
+    "page": "learning_atlas-unsupervised-base.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.base",
+    "class": "UnsupervisedModel",
+    "page": "learning_atlas-unsupervised-base.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.base",
+    "class": "Clusterer",
+    "page": "learning_atlas-unsupervised-base.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.base",
+    "class": "Transformer",
+    "page": "learning_atlas-unsupervised-base.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.clustering",
+    "class": "ClusteringBenchmark",
+    "page": "learning_atlas-unsupervised-clustering.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.comparison",
+    "class": "UnsupervisedCandidateError",
+    "page": "learning_atlas-unsupervised-comparison.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.comparison",
+    "class": "ScratchClusteringBenchmark",
+    "page": "learning_atlas-unsupervised-comparison.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.comparison",
+    "class": "ScratchRepresentationBenchmark",
+    "page": "learning_atlas-unsupervised-comparison.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.datasets",
+    "class": "StructureDataset",
+    "page": "learning_atlas-unsupervised-datasets.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.decomposition",
+    "class": "DecompositionConvergenceError",
+    "page": "learning_atlas-unsupervised-decomposition.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.decomposition",
+    "class": "PCA",
+    "page": "learning_atlas-unsupervised-decomposition.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.density",
+    "class": "DBSCAN",
+    "page": "learning_atlas-unsupervised-density.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.hierarchical",
+    "class": "AgglomerativeClustering",
+    "page": "learning_atlas-unsupervised-hierarchical.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.kmeans",
+    "class": "KMeansConvergenceError",
+    "page": "learning_atlas-unsupervised-kmeans.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.kmeans",
+    "class": "KMeansNumericalError",
+    "page": "learning_atlas-unsupervised-kmeans.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.kmeans",
+    "class": "KMeans",
+    "page": "learning_atlas-unsupervised-kmeans.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.manifold",
+    "class": "PerplexitySearchError",
+    "page": "learning_atlas-unsupervised-manifold.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.manifold",
+    "class": "TSNENumericalError",
+    "page": "learning_atlas-unsupervised-manifold.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.manifold",
+    "class": "TSNEConvergenceError",
+    "page": "learning_atlas-unsupervised-manifold.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.manifold",
+    "class": "AffinityResult",
+    "page": "learning_atlas-unsupervised-manifold.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.manifold",
+    "class": "TSNE",
+    "page": "learning_atlas-unsupervised-manifold.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.metrics",
+    "class": "SilhouetteResult",
+    "page": "learning_atlas-unsupervised-metrics.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.mixture",
+    "class": "GaussianMixtureConvergenceError",
+    "page": "learning_atlas-unsupervised-mixture.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.mixture",
+    "class": "GaussianMixtureNumericalError",
+    "page": "learning_atlas-unsupervised-mixture.md"
+  },
+  {
+    "module": "learning_atlas.unsupervised.mixture",
+    "class": "GaussianMixture",
+    "page": "learning_atlas-unsupervised-mixture.md"
+  }
+]

@@ -51,11 +51,11 @@ does not imply a completed release.
 
 ## Sprint 6 — Benchmarks, documentation, and v1.0
 
-Reference comparisons, guided notebooks as thin package clients, model cards,
-API documentation, portfolio polish, release automation, and promotion through
-`dev → prod → main`.
-
-[Milestone](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/6)
+Delivered in the v1.0 release slice: strict documentation and generated API
+reference, executable notebook tours, model-family cards and complexity bounds,
+and a fixed-seed numerical/timing study. The report retains two explained CART
+prediction disagreements rather than claiming universal parity. See the
+[Sprint 6 evidence](sprint-06.md). Publication follows protected dev → prod → main.
 
 ## Sprint 7 — Algorithms, proofs, and performance
 

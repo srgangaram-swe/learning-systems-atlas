@@ -2,6 +2,7 @@
 
 import joblib
 import numpy as np
+import seaborn as sns
 from matplotlib import pyplot as plt
 from numpy.typing import NDArray
 from sklearn.cluster import DBSCAN, KMeans
@@ -180,14 +181,27 @@ class ClusteringBenchmark:
         context: RunContext,
     ) -> str:
         panels = {"retrospective truth": evaluation_labels, **assignments}
+        sns.set_theme(style="whitegrid", palette="colorblind")
         figure, axes = plt.subplots(1, len(panels), figsize=(15.0, 4.2), sharex=True, sharey=True)
         for axis, (name, labels) in zip(np.atleast_1d(axes), panels.items(), strict=True):
-            axis.scatter(features[:, 0], features[:, 1], c=labels, cmap="viridis", s=14, alpha=0.8)
+            sns.scatterplot(
+                x=features[:, 0],
+                y=features[:, 1],
+                hue=labels.astype(str),
+                style=labels.astype(str),
+                palette="colorblind",
+                s=20,
+                alpha=0.8,
+                ax=axis,
+            )
             axis.set_title(name)
             axis.set_xlabel("feature 1")
             axis.grid(alpha=0.15)
         axes[0].set_ylabel("feature 2")
-        figure.suptitle("Structure discovery; truth is shown only for retrospective evaluation")
+        figure.suptitle(
+            f"Structure discovery; seed={context.seed}, n={len(features)}\nTruth is shown only for retrospective evaluation; -1 denotes noise"
+        )
+        figure.set_layout_engine("constrained")
         return publish_figure(figure, context.artifacts, "plots/clustering_comparison.png")
 
     @staticmethod
@@ -195,18 +209,17 @@ class ClusteringBenchmark:
         metric_names = ("selection_score", "silhouette", "adjusted_rand")
         labels = ("selection score", "silhouette", "retrospective ARI")
         positions = np.arange(len(candidates))
-        width = 0.24
+        sns.set_theme(style="whitegrid", palette="colorblind")
         figure, axis = plt.subplots(figsize=(8.0, 4.8))
-        for index, (metric_name, label) in enumerate(zip(metric_names, labels, strict=True)):
-            offset = (index - 1) * width
-            axis.bar(
-                positions + offset,
-                [candidate.metrics[metric_name] for candidate in candidates],
-                width,
-                label=label,
-            )
+        sns.barplot(
+            x=[candidate.name for candidate in candidates for _ in metric_names],
+            y=[candidate.metrics[metric] for candidate in candidates for metric in metric_names],
+            hue=list(labels) * len(candidates),
+            errorbar=None,
+            ax=axis,
+        )
         axis.set(
-            title="Internal selection and external recovery tell different stories",
+            title=f"Internal selection and external recovery; seed={context.seed}",
             ylabel="Score",
             ylim=(-0.05, 1.05),
             xticks=positions,
@@ -214,4 +227,5 @@ class ClusteringBenchmark:
         )
         axis.legend()
         axis.grid(axis="y", alpha=0.2)
+        figure.set_layout_engine("constrained")
         return publish_figure(figure, context.artifacts, "plots/clustering_metrics.png")
