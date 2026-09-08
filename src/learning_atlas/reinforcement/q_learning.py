@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 import gymnasium as gym
 import numpy as np
+import seaborn as sns
 from gymnasium.spaces import Discrete
 from matplotlib import pyplot as plt
 from numpy.typing import NDArray
@@ -342,15 +343,19 @@ class FrozenLakeBenchmark:
     def _learning_curve(training_returns: FloatArray, context: RunContext) -> str:
         window = min(250, len(training_returns))
         smoothed = np.convolve(training_returns, np.ones(window) / window, mode="valid")
+        sns.set_theme(style="whitegrid", palette="colorblind")
         figure, axis = plt.subplots(figsize=(7.0, 4.5))
-        axis.plot(np.arange(window - 1, len(training_returns)), smoothed, linewidth=1.5)
+        sns.lineplot(
+            x=np.arange(window - 1, len(training_returns)), y=smoothed, linewidth=1.5, ax=axis
+        )
         axis.set(
-            title=f"Q-learning success, {window}-episode moving average",
+            title=f"Q-learning success, {window}-episode moving average\nseed={context.seed}; {len(training_returns)} training episodes",
             xlabel="Training episode",
             ylabel="Mean return",
             ylim=(-0.02, 1.02),
         )
         axis.grid(alpha=0.2)
+        figure.set_layout_engine("constrained")
         return publish_figure(figure, context.artifacts, "plots/q_learning_curve.png")
 
     @staticmethod
@@ -363,22 +368,32 @@ class FrozenLakeBenchmark:
         actions = np.argmax(q_values, axis=1).reshape(grid_size, grid_size)
         arrows = np.array(["←", "↓", "→", "↑"])
 
+        sns.set_theme(style="whitegrid", palette="colorblind")
         figure, axes = plt.subplots(1, 2, figsize=(10.0, 4.4))
-        image = axes[0].imshow(state_values, cmap="magma")
-        axes[0].set_title("Learned state values: max Q(s, a)")
-        figure.colorbar(image, ax=axes[0], fraction=0.046, pad=0.04)
-
-        axes[1].imshow(state_values > 0.0, cmap="Blues", vmin=0.0, vmax=1.0)
-        for row in range(grid_size):
-            for column in range(grid_size):
-                symbol = arrows[actions[row, column]] if state_values[row, column] > 0.0 else "·"
-                axes[1].text(column, row, symbol, ha="center", va="center", fontsize=18)
+        sns.heatmap(
+            state_values, cmap="magma", square=True, ax=axes[0], cbar_kws={"label": "max Q(s, a)"}
+        )
+        axes[0].set_title("Learned state values")
+        symbols = np.where(state_values > 0.0, arrows[actions], "·")
+        sns.heatmap(
+            state_values > 0.0,
+            cmap=["#ffffff", "#d9eaf4"],
+            vmin=0,
+            vmax=1,
+            annot=symbols,
+            fmt="",
+            cbar=False,
+            annot_kws={"color": "black", "fontsize": 18},
+            square=True,
+            ax=axes[1],
+        )
         axes[1].set_title("Persisted greedy policy")
         for axis in axes:
-            axis.set(
-                xticks=range(grid_size), yticks=range(grid_size), xlabel="column", ylabel="row"
-            )
-        figure.suptitle("FrozenLake value function and policy")
+            axis.set(xlabel="column", ylabel="row")
+        figure.suptitle(
+            f"FrozenLake value function and policy; seed={context.seed}\nDot: zero learned value; arrows: greedy action"
+        )
+        figure.set_layout_engine("constrained")
         return publish_figure(figure, context.artifacts, "plots/q_value_policy.png")
 
     @staticmethod
@@ -401,19 +416,25 @@ class FrozenLakeBenchmark:
                 ],
             ]
         )
+        sns.set_theme(style="whitegrid", palette="colorblind")
         figure, axis = plt.subplots(figsize=(6.5, 4.6))
-        bars = axis.bar(
-            ["random policy", "Q-learning"],
-            rates,
-            yerr=errors,
-            capsize=6,
-            color=("#9aa0a6", "#2f6f9f"),
+        sns.barplot(
+            x=["random policy", "Q-learning"],
+            y=rates,
+            hue=["random policy", "Q-learning"],
+            palette="colorblind",
+            legend=False,
+            errorbar=None,
+            ax=axis,
         )
-        axis.bar_label(bars, labels=[f"{rate:.1%}" for rate in rates], padding=4)
+        axis.errorbar([0, 1], rates, yerr=errors, fmt="none", color="black", capsize=6)
+        for index, rate in enumerate(rates):
+            axis.text(index, float(rate + errors[1, index]) + 0.02, f"{rate:.1%}", ha="center")
         axis.set(
-            title="Exploration-free policy evaluation (Wilson 95% intervals)",
+            title=f"Exploration-free evaluation: Wilson 95% intervals\nseed={context.seed}; independent evaluation streams",
             ylabel="Success rate",
             ylim=(0.0, 1.0),
         )
         axis.grid(axis="y", alpha=0.2)
+        figure.set_layout_engine("constrained")
         return publish_figure(figure, context.artifacts, "plots/q_policy_evaluation.png")

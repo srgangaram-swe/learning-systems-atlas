@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 import joblib
 import numpy as np
+import seaborn as sns
 from matplotlib import pyplot as plt
 from numpy.typing import NDArray
 from sklearn.datasets import load_diabetes
@@ -193,25 +194,29 @@ class RegressionBenchmark:
         context: RunContext,
     ) -> str:
         residuals = observed - predicted
+        sns.set_theme(style="whitegrid", palette="colorblind")
         figure, axes = plt.subplots(1, 3, figsize=(15.0, 4.2))
 
         lower = float(min(np.min(observed), np.min(predicted)))
         upper = float(max(np.max(observed), np.max(predicted)))
-        axes[0].scatter(observed, predicted, alpha=0.72, edgecolor="none")
+        sns.scatterplot(x=observed, y=predicted, alpha=0.72, edgecolor="none", ax=axes[0])
         axes[0].plot([lower, upper], [lower, upper], color="black", linestyle="--")
         axes[0].set(title="Observed vs. predicted", xlabel="Observed", ylabel="Predicted")
 
-        axes[1].scatter(predicted, residuals, alpha=0.72, edgecolor="none")
+        sns.scatterplot(x=predicted, y=residuals, alpha=0.72, edgecolor="none", ax=axes[1])
         axes[1].axhline(0.0, color="black", linewidth=1.0, linestyle="--")
         axes[1].set(title="Residual structure", xlabel="Prediction", ylabel="Residual")
 
-        axes[2].hist(residuals, bins=18, alpha=0.82, edgecolor="white")
+        sns.histplot(x=residuals, bins=18, alpha=0.82, edgecolor="white", ax=axes[2])
         axes[2].axvline(0.0, color="black", linewidth=1.0, linestyle="--")
         axes[2].set(title="Residual distribution", xlabel="Residual", ylabel="Count")
 
         for axis in axes:
             axis.grid(alpha=0.2)
-        figure.suptitle(f"Held-out regression diagnostics — {model_name}")
+        figure.suptitle(
+            f"Held-out regression diagnostics — {model_name}; seed={context.seed}, n={len(observed)}"
+        )
+        figure.set_layout_engine("constrained")
         return publish_figure(figure, context.artifacts, "plots/regression_diagnostics.png")
 
     @staticmethod
@@ -224,24 +229,30 @@ class RegressionBenchmark:
         cross_validated_std = [candidate.metrics["cv_rmse_std"] for candidate in candidates]
         held_out = [candidate.metrics["test_rmse"] for candidate in candidates]
         positions = np.arange(len(candidates))
-        width = 0.36
-
+        sns.set_theme(style="whitegrid", palette="colorblind")
         figure, axis = plt.subplots(figsize=(8.0, 4.8))
-        axis.bar(
-            positions - width / 2,
-            cross_validated,
-            width,
-            yerr=cross_validated_std,
-            capsize=4,
-            label="cross-validation RMSE",
+        sns.barplot(
+            x=names * 2,
+            y=cross_validated + held_out,
+            hue=["cross-validation RMSE"] * len(names) + ["held-out RMSE"] * len(names),
+            errorbar=None,
+            ax=axis,
         )
-        axis.bar(positions + width / 2, held_out, width, label="held-out RMSE")
+        axis.errorbar(
+            positions - 0.2,
+            cross_validated,
+            yerr=cross_validated_std,
+            fmt="none",
+            color="black",
+            capsize=4,
+        )
         axis.set(
-            title="Regression candidate comparison",
+            title=f"Regression candidate comparison; seed={context.seed}\nCV error bars: fold standard deviation; test never selects",
             ylabel="RMSE (lower is better)",
             xticks=positions,
             xticklabels=names,
         )
         axis.legend()
         axis.grid(axis="y", alpha=0.2)
+        figure.set_layout_engine("constrained")
         return publish_figure(figure, context.artifacts, "plots/regression_model_comparison.png")

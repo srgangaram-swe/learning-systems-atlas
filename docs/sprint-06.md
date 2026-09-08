@@ -65,6 +65,11 @@ executing those classes. Mkdocstrings renders their actual API contracts.
 Mathematical assumptions, complexity and failure limits are linked from every
 class page through the [family cards](model-cards.md).
 
+The seven notebook-profile plots use Seaborn with colorblind palettes, seed context,
+explicit cluster/noise legends and high-contrast policy annotations. Numerical
+profiles and selection/evaluation semantics are unchanged. Their 34 focused
+reference-model/publication and integration tests pass.
+
 All three [notebooks](notebooks.md) executed top-to-bottom with nbclient and per-cell
 timeouts. They are output-free, thin clients of existing offline profiles. Their
 final discussions preserve training-only selection, label-isolated clustering,
