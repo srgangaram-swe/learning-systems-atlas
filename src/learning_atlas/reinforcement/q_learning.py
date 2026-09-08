@@ -369,7 +369,7 @@ class FrozenLakeBenchmark:
         arrows = np.array(["←", "↓", "→", "↑"])
 
         sns.set_theme(style="whitegrid", palette="colorblind")
-        figure, axes = plt.subplots(1, 2, figsize=(10.0, 4.4))
+        figure, axes = plt.subplots(1, 2, figsize=(10.0, 4.4), layout="constrained")
         sns.heatmap(
             state_values, cmap="magma", square=True, ax=axes[0], cbar_kws={"label": "max Q(s, a)"}
         )
