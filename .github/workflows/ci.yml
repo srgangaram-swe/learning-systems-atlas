@@ -53,6 +53,38 @@ jobs:
       - name: Build wheel and source distribution
         run: uv build
 
+      - name: Verify public-class documentation inventory
+        run: uv run --no-sync python scripts/build_api_reference.py --check
+
+      - name: Build documentation strictly
+        run: uv run --no-sync mkdocs build --strict
+
+      - name: Execute offline notebook tours
+        run: uv run --no-sync python scripts/execute_notebooks.py
+
+  reference-parity:
+    name: Reference parity diagnostics (non-blocking)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    # Issue #38 explicitly requests a diagnostic job. CART's tied partitions can
+    # disagree on held-out predictions; all observations remain downloadable.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+      - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990
+        with:
+          version: "0.11.28"
+          python-version: "3.13"
+      - run: uv sync --locked --all-groups
+      - run: uv run --no-sync python scripts/reference_parity.py runs/reference-parity
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reference-parity
+          path: runs/reference-parity
+          if-no-files-found: error
+          retention-days: 14
+
   test:
     name: Tests / Python ${{ matrix.python-version }}
     runs-on: ubuntu-24.04

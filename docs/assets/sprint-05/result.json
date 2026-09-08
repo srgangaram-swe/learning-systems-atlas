@@ -1,0 +1,151 @@
+{
+  "artifacts": {
+    "bandit_posteriors": "plots/bandit_posteriors.png",
+    "bandit_rewards": "plots/bandit_rewards.png",
+    "bernoulli_regret": "plots/bernoulli_regret.png",
+    "cliff_learning": "plots/cliff_learning.png",
+    "cliff_risk": "plots/cliff_risk.png",
+    "comparison_csv": "comparison.csv",
+    "comparison_markdown": "comparison.md",
+    "configuration": "resolved_config.json",
+    "dqn_ablation": "plots/dqn_ablation.png",
+    "dqn_td_loss": "plots/dqn_td_loss.png",
+    "evidence": "evidence.json",
+    "gaussian_regret": "plots/gaussian_regret.png",
+    "gridworld_policy": "plots/gridworld_policy.png",
+    "heldout_return_distribution": "plots/heldout_return_distribution.png",
+    "heldout_seed_means": "plots/heldout_seed_means.png",
+    "interaction_cost": "plots/interaction_cost.png",
+    "manifest": "manifest.json",
+    "navigation_learning": "plots/navigation_learning.png",
+    "neural_learning": "plots/neural_learning.png",
+    "neural_validation": "plots/neural_validation.png",
+    "planning_residuals": "plots/planning_residuals.png",
+    "ppo_optimization": "plots/ppo_optimization.png",
+    "reinforce_gradient_variance": "plots/reinforce_gradient_variance.png",
+    "result": "result.json",
+    "sample_efficiency": "plots/sample_efficiency.png",
+    "tabular_policy_gap": "plots/tabular_policy_gap.png"
+  },
+  "candidates": [
+    {
+      "metrics": {
+        "seeds_above_cartpole_475": 3.0,
+        "test_bootstrap95_high": 500.0,
+        "test_bootstrap95_low": 497.21,
+        "test_return": 498.7266666666667,
+        "test_seed_sd": 1.4108271805339487,
+        "training_seeds": 3.0,
+        "validation_return": 500.0
+      },
+      "name": "reinforce"
+    },
+    {
+      "metrics": {
+        "seeds_above_cartpole_475": 3.0,
+        "test_bootstrap95_high": 500.0,
+        "test_bootstrap95_low": 496.45,
+        "test_return": 498.19,
+        "test_seed_sd": 1.776034909566819,
+        "training_seeds": 3.0,
+        "validation_return": 498.8333333333333
+      },
+      "name": "dqn"
+    },
+    {
+      "metrics": {
+        "seeds_above_cartpole_475": 1.0,
+        "test_bootstrap95_high": 488.95,
+        "test_bootstrap95_low": 265.26,
+        "test_return": 351.1366666666666,
+        "test_seed_sd": 120.5502676618071,
+        "training_seeds": 3.0,
+        "validation_return": 339.76666666666665
+      },
+      "name": "dqn_recent"
+    },
+    {
+      "metrics": {
+        "seeds_above_cartpole_475": 0.0,
+        "test_bootstrap95_high": 372.01,
+        "test_bootstrap95_low": 9.26,
+        "test_return": 130.18666666666667,
+        "test_seed_sd": 209.42515043168365,
+        "training_seeds": 3.0,
+        "validation_return": 137.60000000000002
+      },
+      "name": "dqn_online_target"
+    },
+    {
+      "metrics": {
+        "seeds_above_cartpole_475": 0.0,
+        "test_bootstrap95_high": 9.33,
+        "test_bootstrap95_low": 9.26,
+        "test_return": 9.293333333333331,
+        "test_seed_sd": 0.03511884584284264,
+        "training_seeds": 3.0,
+        "validation_return": 9.1
+      },
+      "name": "dqn_recent_online"
+    },
+    {
+      "metrics": {
+        "seeds_above_cartpole_475": 2.0,
+        "test_bootstrap95_high": 500.0,
+        "test_bootstrap95_low": 434.09,
+        "test_return": 478.03,
+        "test_seed_sd": 38.053156242288246,
+        "training_seeds": 3.0,
+        "validation_return": 500.0
+      },
+      "name": "ppo"
+    },
+    {
+      "metrics": {
+        "seeds_above_cartpole_475": 0.0,
+        "test_bootstrap95_high": 23.92,
+        "test_bootstrap95_low": 22.59,
+        "test_return": 23.24666666666667,
+        "test_seed_sd": 0.6651566231597897,
+        "training_seeds": 3.0,
+        "validation_return": 0.0
+      },
+      "name": "random"
+    }
+  ],
+  "experiment": "reinforcement_benchmark",
+  "metrics": {
+    "seeds_above_cartpole_475": 3.0,
+    "test_bootstrap95_high": 500.0,
+    "test_bootstrap95_low": 497.21,
+    "test_return": 498.7266666666667,
+    "test_seed_sd": 1.4108271805339487,
+    "training_seeds": 3.0,
+    "validation_return": 500.0
+  },
+  "notes": [
+    "Synthetic environments only; no trading, robotics, or production readiness inference.",
+    "Training-validation selects checkpoints and the headline method; test is never used for selection.",
+    "Uncertainty resamples training-seed means, not falsely independent episodes; few-seed intervals are fragile.",
+    "Ablations share maximum episode/interaction and optimizer settings; realized interactions differ with survival.",
+    "Reduced CI budgets validate mechanics, not the CartPole 475/500 solve criterion."
+  ],
+  "paradigm": "reinforcement",
+  "schema_version": "1.0.0",
+  "seed": 42,
+  "selected_model": "reinforce",
+  "source": {
+    "details": {
+      "control_max_steps": 500,
+      "offline": true,
+      "selection_stream": 20,
+      "test_stream": 900,
+      "variance_stream": 400
+    },
+    "fingerprint_sha256": "516ae7fa23406a32be308640569ae7e0d3679f16baea4553f01bcafb5a8b1ace",
+    "kind": "environment",
+    "name": "Atlas stationary bandits/Gridworld/CartPole-v1",
+    "target_used_for_fit": null,
+    "version": "1"
+  }
+}

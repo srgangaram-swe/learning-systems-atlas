@@ -13,6 +13,7 @@ from learning_atlas.core.config import (
     ExperimentConfig,
     QLearningConfig,
     RegressionBenchmarkConfig,
+    ReinforcementBenchmarkConfig,
     ScratchClassificationBenchmarkConfig,
     ScratchClusteringBenchmarkConfig,
     ScratchMLPBenchmarkConfig,
@@ -132,7 +133,21 @@ def _deep_autoencoder(config: BaseExperimentConfig) -> Experiment:
     return DeepAutoencoderBenchmark(config)
 
 
+def _reinforcement(config: BaseExperimentConfig) -> Experiment:
+    if not isinstance(config, ReinforcementBenchmarkConfig):
+        raise TypeError("reinforcement_benchmark requires ReinforcementBenchmarkConfig")
+    from learning_atlas.reinforcement.benchmark import ReinforcementBenchmark
+
+    return ReinforcementBenchmark(config)
+
+
 REGISTRY: dict[str, ExperimentSpec] = {
+    "reinforcement_benchmark": ExperimentSpec(
+        name="reinforcement_benchmark",
+        paradigm=LearningParadigm.REINFORCEMENT,
+        description="Multi-seed bandit, planning, TD, REINFORCE, DQN, and PPO evidence laboratory.",
+        factory=_reinforcement,
+    ),
     "regression_benchmark": ExperimentSpec(
         name="regression_benchmark",
         paradigm=LearningParadigm.SUPERVISED,
