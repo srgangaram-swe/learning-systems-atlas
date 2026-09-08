@@ -1,0 +1,15 @@
+{
+  "bandit_steps": 2000,
+  "control_max_steps": 500,
+  "dqn_ablations": true,
+  "dqn_episodes": 800,
+  "experiment": "reinforcement_benchmark",
+  "ppo_episodes": 300,
+  "reinforce_episodes": 2000,
+  "repetitions": 3,
+  "seed": 42,
+  "tabular_episodes": 1500,
+  "test_episodes": 100,
+  "validation_episodes": 10,
+  "variance_episodes": 32
+}

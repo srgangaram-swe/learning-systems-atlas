@@ -1,4 +1,4 @@
-.PHONY: bootstrap format quality unit test integration check demo demo-sprint2 demo-sprint3 demo-sprint4 build
+.PHONY: bootstrap format quality unit test integration check demo demo-sprint2 demo-sprint3 demo-sprint4 demo-sprint5 build
 
 bootstrap:
 	uv sync --locked --all-groups
@@ -46,5 +46,21 @@ demo-sprint4:
 		--config-dir configs/deep/sprint-04 \
 		--output-dir runs/sprint-04
 
+demo-sprint5:
+	uv run learning-atlas benchmark-reinforcement \
+		configs/reinforcement/sprint-05/reinforcement.yaml \
+		--output-dir runs/sprint-05
+
 build:
 	uv build
+
+.PHONY: docs notebooks reference-parity
+docs:
+	uv run python scripts/build_api_reference.py --check
+	uv run mkdocs build --strict
+
+notebooks:
+	uv run python scripts/execute_notebooks.py
+
+reference-parity:
+	uv run python scripts/reference_parity.py runs/reference-parity

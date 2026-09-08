@@ -5,6 +5,7 @@
 
 # Local agent operating context (intentionally not published)
 /AGENTS.md
+/ai.md
 
 # Python
 __pycache__/
@@ -25,3 +26,4 @@ coverage.xml
 # Generated experiment outputs
 artifacts/
 runs/
+site/

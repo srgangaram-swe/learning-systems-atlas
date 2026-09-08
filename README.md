@@ -6,7 +6,7 @@
 ![Python](https://img.shields.io/badge/Python-3.11–3.13-3776AB)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Learning Systems Atlas is a reproducible, production-grade portfolio of
+Learning Systems Atlas is a reproducible research-engineering portfolio of
 implemented supervised, unsupervised, deep, and reinforcement learning systems,
 with milestone-backed plans for generative AI, proof-linked classical
 algorithms, and distributed ML systems.
@@ -19,15 +19,67 @@ reference experiment has a typed configuration, explicit seed streams, a
 declared selection/evaluation boundary, versioned artifacts, diagnostics, and
 unit plus integration tests. Supervised and RL studies include naive baselines;
 unsupervised studies expose internal criteria and retrospective truth separately.
-Production logic lives in a typed `src` package; notebooks are reserved for later
-presentation layers.
+Production logic lives in a typed `src` package; the three executable notebooks
+are thin presentation clients of the same tested runner.
+
+## v1.0 documentation and reference qualification
+
+Explore the [documentation site](https://srgangaram-swe.github.io/learning-systems-atlas/),
+[family model cards and complexity bounds](docs/model-cards.md),
+[source-derived API reference](docs/api/index.md), and [guided notebooks](docs/notebooks.md).
+
+The [Sprint 6 reference study](docs/sprint-06.md) compares nine fixed model pairs
+with scikit-learn over three seeds. **25 of 27 held-out prediction-agreement
+checks pass.** Two CART fits choose equivalent training partitions through
+different feature thresholds and disagree on new rows; those failures and their
+losses remain visible. No tolerance was enlarged to manufacture parity.
+Timings are local observations, not a speedup guarantee. v1.0 is a documented
+research release, not a claim of production model qualification.
 
 > [!NOTE]
 > This is a personal engineering and research portfolio built entirely from
 > bundled, synthetic, or openly documented sources. It contains no employer or
 > proprietary data and does not represent any employer.
 
-## Latest evidence — deep-learning systems
+## Latest evidence: reinforcement learning
+
+Sprint 5 implements stationary bandits, exact Gridworld planning, Q-learning,
+SARSA, REINFORCE, DQN, and PPO-Clip with generalized advantage estimation.
+The neural methods share the existing Trainer's checked optimizer step. DQN
+checkpoints preserve replay, target weights, Adam state, RNGs, and validation
+selection across an interrupted run without executable model serialization.
+
+The committed CPU reference uses three training seeds and 100 untouched test
+episodes per trained policy. Checkpoints are selected on a separate validation
+stream. Results on the 500-step CartPole task:
+
+| Method | Mean test return | SD across training seeds | Seeds meeting 475/500 |
+|---|---:|---:|---:|
+| REINFORCE | 498.73 | 1.41 | 3/3 |
+| DQN | 498.19 | 1.78 | 3/3 |
+| PPO | 478.03 | 38.05 | 2/3 |
+| Random policy | 23.25 | 0.67 | 0/3 |
+
+PPO learned quickly, but seed 43 scored 434.09 on the test stream despite a
+500-point validation score. DQN ablations expose unstable bootstrapping when
+target synchronization is removed. The learned REINFORCE baseline reduced
+measured gradient variance by 68.6% to 94.4% across the three fitted policies.
+These are bounded synthetic-control results; three seeds do not establish
+general policy reliability or readiness for deployment.
+
+<table>
+  <tr>
+    <td><img src="docs/assets/sprint-05/plots/neural_learning.png" alt="REINFORCE, DQN, and PPO training curves with different declared episode budgets"></td>
+    <td><img src="docs/assets/sprint-05/plots/heldout_seed_means.png" alt="Every trained policy's untouched test mean, including PPO and DQN ablation failures"></td>
+  </tr>
+</table>
+
+Read the [Sprint 5 findings and 20-plot gallery](docs/sprint-05.md),
+[mathematics and API contracts](docs/reinforcement-learning.md), and
+[machine-readable reference](docs/assets/sprint-05/evidence.json).
+Run it with `make demo-sprint5`.
+
+## Sprint 4 evidence: deep-learning systems
 
 Sprint 4 connects first principles to production-shaped PyTorch practice. A
 NumPy-only reverse-mode autodiff engine supports a from-scratch multilayer
@@ -352,7 +404,7 @@ The repository has nine assigned milestones and 103 scoped work items:
 9. [Generative AI & foundation model systems](https://github.com/srgangaram-swe/learning-systems-atlas/milestone/16)
 
 Feature branches are cut from `dev`, validated through pull requests, and
-deleted after merge. Release candidates flow `dev → main → prod`. See
+deleted after merge. Release candidates flow `dev → prod → main`. See
 [CONTRIBUTING.md](CONTRIBUTING.md) and the detailed [roadmap](docs/roadmap.md).
 
 ## Honest limitations

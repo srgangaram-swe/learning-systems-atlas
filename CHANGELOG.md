@@ -5,6 +5,27 @@ the project uses [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-07
+
+### Added
+
+- Strict MkDocs Material documentation, source-derived API inventory for every
+  public top-level class, family model cards and implementation-specific complexity.
+- Three offline, output-free notebook tours executed through nbclient in CI.
+- Nine fixed scikit-learn oracle pairs over three seeds, retaining all train/test
+  losses, naive baselines and timing samples. Twenty-five of 27 exact held-out
+  comparisons pass; two CART tied-partition disagreements remain explicitly visible.
+- Seaborn release evidence and release-only GitHub Pages artifact deployment.
+
+### Release scope
+
+The first six sprints provide the typed transactional platform and initial
+reference panels (Sprint 1), scratch supervised estimators (Sprint 2), scratch
+clustering/representation (Sprint 3), autodiff and neural systems (Sprint 4), the
+expanded offline RL control laboratory (Sprint 5), and documentation/reference
+qualification (Sprint 6). The experiment boundary remains unchanged. Future
+algorithms, distributed and generative milestones remain planned.
+
 ## [0.4.0] - 2026-07-19
 
 ### Added
