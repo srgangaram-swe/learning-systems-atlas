@@ -5,6 +5,14 @@ the project uses [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-07
+
+### Fixed
+
+- Correct the positive-penalty Ridge card to O(nd²+d³) for explicit Gram
+  construction and dense solve, including wide inputs; distinguish zero-penalty
+  least squares and document normal-equation conditioning. Estimators are unchanged.
+
 ## [1.0.0] - 2026-09-07
 
 ### Added
