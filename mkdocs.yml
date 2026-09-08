@@ -1,0 +1,40 @@
+site_name: Learning Systems Atlas
+site_description: Signal. Structure. Strategy. Reproducible mathematical learning systems.
+site_url: https://srgangaram-swe.github.io/learning-systems-atlas/
+repo_url: https://github.com/srgangaram-swe/learning-systems-atlas
+theme:
+  name: material
+  font: false
+  features: [navigation.sections, content.code.copy]
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: false
+            show_root_heading: true
+            show_signature_annotations: true
+            inherited_members: false
+nav:
+  - Start: index.md
+  - Supervised learning:
+      - Mathematical models: sprint-02.md
+      - Deep learning: sprint-04.md
+  - Unsupervised learning:
+      - Structure and representation: sprint-03.md
+  - Reinforcement learning:
+      - Control laboratory: reinforcement-learning.md
+      - Evidence: sprint-05.md
+  - Model cards: model-cards.md
+  - Guided notebooks: notebooks.md
+  - Reference parity: sprint-06.md
+  - API reference: api/index.md
+  - Architecture: architecture.md
+  - Reproducibility: reproducibility.md
+  - Roadmap: roadmap.md
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - tables

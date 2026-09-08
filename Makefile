@@ -53,3 +53,14 @@ demo-sprint5:
 
 build:
 	uv build
+
+.PHONY: docs notebooks reference-parity
+docs:
+	uv run python scripts/build_api_reference.py --check
+	uv run mkdocs build --strict
+
+notebooks:
+	uv run python scripts/execute_notebooks.py
+
+reference-parity:
+	uv run python scripts/reference_parity.py runs/reference-parity
